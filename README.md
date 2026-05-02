@@ -5,7 +5,7 @@ LoveU es una aplicación estilo match entre usuarios, inspirada en el funcionami
 ## Integrantes
 
 - Daniel Pinto
-- Diego [Apellido]
+- Diego Santibanez
 
 ## Tecnologías
 
