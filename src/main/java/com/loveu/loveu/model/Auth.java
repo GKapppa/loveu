@@ -1,3 +1,5 @@
+
+
 package com.loveu.loveu.model;
 
 import jakarta.persistence.Column;
