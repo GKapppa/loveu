@@ -1,5 +1,3 @@
 package com.loveu.loveu.model;
 
-public class MatchStatus {
-
-}
+public enum MatchStatus { ACTIVE, UNMATCHED }
