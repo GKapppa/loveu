@@ -27,13 +27,13 @@ public class Region {
     private Integer id;
 
     @NotBlank(message = "El nombre de la Region no puede estar vacio!")
-    @Column(name="nombre_region", length=50)
+    @Column(name="nombre_region", length=50, nullable=false)
     @Size(max= 50, message="El nombre de la region no puede contener más de 50 caracteres")
     private String nombreRegion;
 
 
     @NotBlank(message="La abreviacion de la region no puede estar vacio!")
-    @Column(name="abreviacion", length=4)
+    @Column(name="abreviacion", length=4, nullable=false)
     @Size(max=4, message="La abreviacion de la region no puede ser más de 4")
     private String abreviatura;
     

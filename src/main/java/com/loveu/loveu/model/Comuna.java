@@ -29,7 +29,7 @@ public class Comuna {
     private Integer id;
 
     @NotBlank(message="El nombre de la comuna no puede estar vacio!")
-    @Column(name="nombre_comuna", length=50)
+    @Column(name="nombre_comuna", length=50, nullable=false)
     @Size(max=50, message="El nombre de la comuna no puede pasar los 50 caracteres!")
     private String nombreComuna;
 
