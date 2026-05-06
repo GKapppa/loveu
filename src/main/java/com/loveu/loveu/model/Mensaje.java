@@ -1,8 +1,18 @@
 package com.loveu.loveu.model;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "messages")
@@ -13,16 +23,16 @@ import java.time.LocalDateTime;
 public class Mensaje {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "match_id", nullable = false)
-    private Long matchId;
+    private Integer matchId;
 
     @Column(name = "sender_id", nullable = false)
-    private Long senderId;
+    private Integer senderId;
 
     @Column(name = "receiver_id", nullable = false)
-    private Long receiverId;
+    private Integer receiverId;
 
     @Column(nullable = false, length = 1000)
     private String content;
