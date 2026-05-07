@@ -43,7 +43,7 @@ public class Mensaje {
     @Column(nullable = false, length = 1000)
     private String contenido;
 
-    @Column(name = "sent_at", nullable = false)
+    @Column(name = "sent_at", nullable = false) // SentAt a que hora y día fue enviado el mensaje
     private LocalDateTime sentAt;
 
     @Column(name = "is_read", nullable = false)

@@ -61,5 +61,5 @@ public class Reporte {
     }
     
     @Column(nullable = false)
-    private Boolean activo = true;
+    private boolean activo = true;
 }

@@ -1,6 +1,8 @@
 package com.loveu.loveu.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.loveu.loveu.model.DecisionSwipe;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +13,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioDTO {
-
+public class SwipeDTO {
     private Integer id;
-    private String primerNombre;
-    private String primerApellido;
-    private LocalDate fechaNacimiento;
-    private String telefono;
+    private Integer perfilOrigenId;
+    private Integer perfilDestinoId;
+    private DecisionSwipe decision;
+    private LocalDateTime fecha;
     private boolean activo;
-
 }

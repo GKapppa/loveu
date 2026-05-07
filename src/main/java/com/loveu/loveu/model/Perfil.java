@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class Perfil {
-
     // Perfil contiene la informacion visible del usuario dentro de la app.
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -50,7 +49,7 @@ public class Perfil {
     private Integer alturaCm;
 
     @Column(nullable = false)
-    private Boolean activo = true;
+    private boolean activo = true;
 
     
     @OneToOne

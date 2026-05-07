@@ -45,7 +45,7 @@ public class Swipe {
     private LocalDateTime fecha;
 
     @Column(nullable=false)
-    private Boolean activo = true;
+    private boolean activo = true;
 
     /* Nota: Encontraomos este metodo en la documentacion de JPA
     Se ejecuta antes de insertar un nuevo Swipe en la base de datos. Si no se asgina fecha manualmente,

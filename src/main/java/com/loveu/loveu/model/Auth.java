@@ -44,7 +44,7 @@ public class Auth {
     private String rol;  //Creamos una variable "rol" por si es un ADMIN o Usuario
 
     @Column(nullable=false)
-    private Boolean activo = true;
+    private boolean activo = true;
 
     @OneToOne
     @JoinColumn(name= "usuario_id", referencedColumnName="id")
