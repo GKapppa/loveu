@@ -61,6 +61,7 @@ public class FotoPerfil {
 
     @Column(nullable = false)
     private boolean activo = true;
+    
     // Antes de guardar la foto, se asigna automaticamente la fecha de subida si viene vacia.
     // Si la fecha subida no ha sido seteada, se le asigna la fecha actual al momento de crear la entidad.
     @PrePersist 

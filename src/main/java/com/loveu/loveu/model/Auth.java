@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Auth {
     // Auth almacena las credenciales de acceso y el rol asociado a un Usuario.
-    // Este modelo representa el login/seguridad basica: email, password, rol y usuario
+    // Este modelo representa el login/seguridad basica: email, password, rol y usuario relacionado. 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;

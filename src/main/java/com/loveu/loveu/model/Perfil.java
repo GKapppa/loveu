@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Perfil {
 
+    // Perfil contiene la informacion visible del usuario dentro de la app.
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
@@ -51,10 +52,12 @@ public class Perfil {
     @Column(nullable = false)
     private Boolean activo = true;
 
+    
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable=false)
     private Usuario usuario;
 
+    // Muchos perfiles pueden pertenecer a una comuna
     @ManyToOne
     @JoinColumn(name="comuna_id", referencedColumnName="id", nullable=false)
     private Comuna comuna;
