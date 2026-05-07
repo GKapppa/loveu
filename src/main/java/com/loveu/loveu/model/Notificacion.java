@@ -14,10 +14,10 @@ public class Notificacion{
     // Notificacion almacena avisos generados por eventos importantes del sistema.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private Integer userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
