@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.loveu.loveu.model.Auth;
 
 @Repository
-public interface AuthRepository extends JpaRepository<Integer, Auth> {
+public interface AuthRepository extends JpaRepository<Auth, Integer> {
 
 }
