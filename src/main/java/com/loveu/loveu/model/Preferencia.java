@@ -25,13 +25,13 @@ import lombok.NoArgsConstructor;
 @Table(name="preferencias")
 @Entity
 public class Preferencia {
-
+    // Preferencia defino los filtros de busqueda que tendra asociado un perfil.
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-
+    // Esto hace que cada perfil_id tenga sus prefeerencias unicas por así decirlo.
     @OneToOne
-    @JoinColumn(name="perfil_id", referencedColumnName="id")
+    @JoinColumn(name="perfil_id", referencedColumnName="id", unique=true, nullable=false)
     private Perfil perfil;
 
     @NotBlank(message="El genero deseado no debe estar vacio!")
@@ -43,17 +43,18 @@ public class Preferencia {
     @Column(name="edad_minima",nullable=false)
     @Min(value=18, message="La edad minima es 18!")
     private Integer edadMinima;
-
+    // Esto se validara en el services pero ya tenemos mensaje de precaucion.
     @NotNull(message="La edad maxima no puede estar nula!")
     @Column(name="edad_maxima",nullable=false)
+    @Min(value=18, message="La edad minima es 18!")
     @Max(value=99, message="La edad maxima es 99")
     private Integer edadMaxima;
 
     @NotNull(message="La distancia no puede estar nula!")
     @Column(name="distancia_maxima_km", nullable=false)
     @Min(value=1, message="La distancia minima debe ser al menos 1KM")
-    @Max(value=200, message="La distancia maxima debe ser al menos 200KM")
-    private Integer distanciaMaxima;
+    @Max(value=200, message="La distancia maxima no puede superar los 200KM")
+    private Integer distanciaMaximaKm;
 
     @Column(nullable = false)
     private Boolean activo = true;

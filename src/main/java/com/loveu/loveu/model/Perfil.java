@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -36,18 +37,8 @@ public class Perfil {
 
     @NotBlank(message="La biografia es obligatoria")
     @Size(max=500, message="La biografia no debe superar los 500 caracteres")
-    @Column(name="biografia",nullable=false, length=80)
+    @Column(name="biografia",nullable=false, length=500)
     private String biografia;
-
-    @NotBlank(message = "La ciudad es obligatoria")
-    @Size(max = 80, message = "La ciudad no puede superar los 80 caracteres")
-    @Column(name="ciudad", nullable = false, length = 80)
-    private String ciudad;
-
-    @NotBlank(message = "El país es obligatorio")
-    @Size(max = 80, message = "El país no puede superar los 80 caracteres")
-    @Column(name="pais",nullable = false, length = 80)
-    private String pais;
 
     @Size(max = 80, message = "La ocupación no puede superar los 80 caracteres")
     @Column(name="ocupacion", length = 80, nullable=false)
@@ -61,6 +52,10 @@ public class Perfil {
     private Boolean activo = true;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable=false)
     private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name="comuna_id", referencedColumnName="id", nullable=false)
+    private Comuna comuna;
 }

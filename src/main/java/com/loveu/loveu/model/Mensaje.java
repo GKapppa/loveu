@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,28 +23,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Mensaje {
+    // Mensaje pertenece a un match y tiene un emisor y un receptor, ambos perfiles. El contenido del mensaje se guarda junto con la fecha de envio y el estado de lectura.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "match_id", nullable = false)
-    private Integer matchId;
+    @ManyToOne
+    @JoinColumn(name="match_id", referencedColumnName="id", nullable=false)
+    private Match match;
 
-    @Column(name = "sender_id", nullable = false)
-    private Integer senderId;
+    @ManyToOne
+    @JoinColumn(name="perfil_emisor_id", referencedColumnName="id", nullable=false)
+    private Perfil perfilEmisor;
 
-    @Column(name = "receiver_id", nullable = false)
-    private Integer receiverId;
+    @ManyToOne
+    @JoinColumn(name="perfil_receptor_id", referencedColumnName="id", nullable=false)
+    private Perfil perfilReceptor;
 
     @Column(nullable = false, length = 1000)
-    private String content;
+    private String contenido;
 
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt;
 
     @Column(name = "is_read", nullable = false)
     private boolean read = false;
-
+    // Ante s deguardar el mensaje, se asigna automaticamente la fecha de envio si viene vacia.
     @PrePersist
-    public void prePersist() { this.sentAt = LocalDateTime.now(); }
+    public void prePersist(){
+        this.sentAt = LocalDateTime.now(); }
 }

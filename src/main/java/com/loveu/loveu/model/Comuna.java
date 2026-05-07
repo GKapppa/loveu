@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Table(name="comunas")
 public class Comuna {
 
-
+    // Comuna pertenece a una Region y permtite ubicar de manera geografica un perfil.
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
@@ -34,6 +34,6 @@ public class Comuna {
     private String nombreComuna;
 
     @ManyToOne
-    @JoinColumn(name="region_id", referencedColumnName="id") //Hacemos relacion Many to one ya que esta clase guarda el ID de Region 
+    @JoinColumn(name="region_id", referencedColumnName="id", nullable=false) //Hacemos relacion Many to one ya que esta clase guarda el ID de Region 
     private Region region;
 }
