@@ -16,8 +16,9 @@ public class Notificacion{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name="perfil_destinatario_id", referencedColumnName="id", nullable=false)
+    private Perfil perfilDestinatario;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

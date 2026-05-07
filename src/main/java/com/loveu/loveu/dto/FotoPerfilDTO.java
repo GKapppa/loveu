@@ -1,6 +1,6 @@
 package com.loveu.loveu.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UsuarioDTO {
-
+public class FotoPerfilDTO {
     private Integer id;
-    private String primerNombre;
-    private String primerApellido;
-    private LocalDate fechaNacimiento;
-    private String telefono;
+    private Integer perfilId;
+    private String urlFoto;
+    private boolean principal;
+    private Integer orden;
+    private LocalDateTime fechaSubida;
     private boolean activo;
-
 }

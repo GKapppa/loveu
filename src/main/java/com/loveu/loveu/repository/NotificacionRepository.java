@@ -9,5 +9,5 @@ import com.loveu.loveu.model.Notificacion;
 
 @Repository
 public interface NotificacionRepository extends JpaRepository<Notificacion, Integer> {
-    List<Notificacion> findByUserIdAndReadFalse(Integer userId);
+    List<Notificacion> findByPerfilDestinatarioIdAndReadFalse(Integer perfilDestinatarioId);
 }

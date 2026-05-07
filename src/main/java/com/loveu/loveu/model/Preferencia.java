@@ -57,6 +57,6 @@ public class Preferencia {
     private Integer distanciaMaximaKm;
 
     @Column(nullable = false)
-    private Boolean activo = true;
+    private boolean activo = true;
 
 }
