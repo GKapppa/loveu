@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Notificacion{
+    // Notificacion almacena avisos generados por eventos importantes del sistema.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +31,7 @@ public class Notificacion{
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
+    // Antes de guardar la notificacion, se asigna automaticanete la fecha de creacion.
     @PrePersist
     public void prePersist() { 
         this.createdAt = LocalDateTime.now(); }
