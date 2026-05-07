@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
     List<Reporte> findByEstadoReporte(EstadoReporte estadoReporte);
-    List<Reporte> findPerfilReportadoId(Integer perfilId);
+    List<Reporte> findByPerfilReportadoId(Integer perfilId);
 }
