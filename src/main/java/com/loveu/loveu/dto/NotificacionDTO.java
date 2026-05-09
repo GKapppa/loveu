@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NotificacionDTO {
     private Integer id;
-    private Integer perfilDestinatario;
+    private Integer perfilDestinatarioId;
     private String message;
     private boolean read;
     private LocalDateTime createdAt;

@@ -17,4 +17,5 @@ public class PerfilDTO {
     private boolean activo;
     private Integer usuarioId;
     private Integer comunaId;
+    private String ocupacion;
 }
