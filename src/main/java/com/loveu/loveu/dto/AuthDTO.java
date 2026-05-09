@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AuthDTO {
     private Integer id;
     private String email;
-    private String password;
+    // Decidimos no incluir password en el DTO de respuesta para evitar exponer Informacion sensible.
     private String rol;
     private boolean activo;
     private Integer usuarioId;

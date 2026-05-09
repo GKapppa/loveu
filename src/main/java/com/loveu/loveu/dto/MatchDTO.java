@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MatchDTO {
     private Integer id;
-    private Integer perfilA;
-    private Integer perfilB;
+    private Integer perfilAId;
+    private Integer perfilBId;
     private MatchStatus status;
     private LocalDateTime matchedAt;
 

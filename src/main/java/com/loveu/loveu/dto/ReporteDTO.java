@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReporteDTO {
     private Integer id;
-    private Integer perfilReportante;
-    private Integer perfilReportado;
+    private Integer perfilReportanteId;
+    private Integer perfilReportadoId;
     private String razonReporte;
     private EstadoReporte estadoReporte;
     private LocalDateTime fechaReporte;
