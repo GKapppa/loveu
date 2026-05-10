@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.loveu.loveu.dto.PreferenciaDTO;
+import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.model.Preferencia;
 import com.loveu.loveu.repository.PerfilRepository;
 import com.loveu.loveu.repository.PreferenciaRepository;
@@ -21,6 +22,7 @@ public class PreferenciaService {
 
     public PreferenciaDTO toDTO(Preferencia preferencia){
         return PreferenciaDTO.builder()
+                .perfilId(preferencia.getPerfil().getId())
                 .generoDeseado(preferencia.getGeneroDeseado())
                 .edadMinima(preferencia.getEdadMinima())
                 .edadMaxima(preferencia.getEdadMaxima())
@@ -37,7 +39,15 @@ public class PreferenciaService {
             throw new RuntimeException("La edad minima no puede ser mayor a la edad maxima");
         }
 
+        if (preferenciaRepository.existsByPerfilId(dto.getPerfilId())) {
+            throw new RuntimeException("Este perfil ya tiene preferencias creadas");
+        }
+
+        Perfil perfil = perfilRepository.findById(dto.getPerfilId())
+                .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
+
         Preferencia preferencia = Preferencia.builder()
+                .perfil(perfil)
                 .generoDeseado(dto.getGeneroDeseado())
                 .edadMinima(dto.getEdadMinima())
                 .edadMaxima(dto.getEdadMaxima())

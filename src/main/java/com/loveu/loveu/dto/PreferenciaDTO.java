@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PreferenciaDTO {
+    private Integer perfilId;
     private String generoDeseado;
     private Integer edadMinima;
     private Integer edadMaxima;

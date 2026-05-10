@@ -2,7 +2,6 @@ package com.loveu.loveu.service;
 
 import com.loveu.loveu.dto.NotificacionDTO;
 import com.loveu.loveu.model.Notificacion;
-import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.NotificacionRepository;
 import com.loveu.loveu.repository.PerfilRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 public class NotificacionService {
     private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
@@ -25,22 +23,20 @@ public class NotificacionService {
     @Autowired
     private PerfilRepository perfilRepository;
 
-    public NotificacionDTO crearNotificacion(Integer perfilDestinatarioId, NotificacionType type, String message) {
-        log.info("Creando notificación tipo={} para perfilDestinatarioId={}", type, perfilDestinatarioId);
+    public NotificacionDTO crearNotificacion(NotificacionDTO dto) {
+        log.info("Creando notificacion tipo={} para perfilDestinatarioId={}", dto.getType(), dto.getPerfilDestinatarioId());
 
-        Perfil perfilDestinatario = perfilRepository.findById(perfilDestinatarioId)
-            .orElseThrow(() -> new RuntimeException("Perfil destinatario no encontrado: " + perfilDestinatarioId));
+        Perfil perfilDestinatario = perfilRepository.findById(dto.getPerfilDestinatarioId())
+            .orElseThrow(() -> new RuntimeException("Perfil destinatario no encontrado: " + dto.getPerfilDestinatarioId()));
 
-        Notificacion n = Notificacion.builder()
+        Notificacion notificacion = Notificacion.builder()
             .perfilDestinatario(perfilDestinatario)
-            .type(type)
-            .message(message)
-            // createdAt se asigna automáticamente en @PrePersist
+            .type(dto.getType())
+            .message(dto.getMessage())
             .build();
 
-        n = notificacionRepository.save(n);
-        log.info("Notificación id={} creada", n.getId());
-        return toDTO(n);
+        notificacion = notificacionRepository.save(notificacion);
+        return toDTO(notificacion);
     }
 
     public List<NotificacionDTO> getNotificacionesPorPerfil(Integer perfilDestinatarioId) {
@@ -50,36 +46,38 @@ public class NotificacionService {
     }
 
     public List<NotificacionDTO> getNoLeidas(Integer perfilDestinatarioId) {
-        log.info("Obteniendo notificaciones no leídas para perfilDestinatarioId={}", perfilDestinatarioId);
+        log.info("Obteniendo notificaciones no leidas para perfilDestinatarioId={}", perfilDestinatarioId);
         return notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId)
             .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public Integer contarNoLeidas(Integer perfilDestinatarioId) {
         Integer count = notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId).size();
-        log.info("Perfil id={} tiene {} notificaciones no leídas", perfilDestinatarioId, count);
+        log.info("Perfil id={} tiene {} notificaciones no leidas", perfilDestinatarioId, count);
         return count;
     }
 
     public void marcarComoLeida(Integer notificacionId) {
-        log.info("Marcando notificación id={} como leída", notificacionId);
-        Notificacion n = notificacionRepository.findById(notificacionId)
-            .orElseThrow(() -> new RuntimeException("Notificación no encontrada: " + notificacionId));
-        n.setRead(true);
-        notificacionRepository.save(n);
+        log.info("Marcando notificacion id={} como leida", notificacionId);
+        Notificacion notificacion = notificacionRepository.findById(notificacionId)
+            .orElseThrow(() -> new RuntimeException("Notificacion no encontrada: " + notificacionId));
+
+        notificacion.setRead(true);
+        notificacionRepository.save(notificacion);
     }
 
     public void eliminarNotificacion(Integer notificacionId) {
-        log.info("Eliminando notificación id={}", notificacionId);
+        log.info("Eliminando notificacion id={}", notificacionId);
         notificacionRepository.deleteById(notificacionId);
     }
 
-    private NotificacionDTO toDTO(Notificacion n) {
+    private NotificacionDTO toDTO(Notificacion notificacion) {
         return NotificacionDTO.builder()
-            .type(n.getType())
-            .message(n.getMessage())
-            .read(n.isRead())
-            .createdAt(n.getCreatedAt())
+            .perfilDestinatarioId(notificacion.getPerfilDestinatario().getId())
+            .type(notificacion.getType())
+            .message(notificacion.getMessage())
+            .read(notificacion.isRead())
+            .createdAt(notificacion.getCreatedAt())
             .build();
     }
 }

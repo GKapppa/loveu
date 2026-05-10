@@ -30,18 +30,6 @@ El objetivo principal es demostrar el funcionamiento de una API REST conectada a
 
 El proyecto esta organizado por capas para separar responsabilidades:
 
-```text
-controller  -> recibe las peticiones HTTP y responde al cliente
-service     -> contiene la logica principal del sistema
-repository  -> conecta la aplicacion con la base de datos
-model       -> representa las entidades y tablas
-dto         -> controla que datos entran y salen por la API
-docs        -> guarda scripts o informacion de base de datos
-```
-
-Esta estructura ayuda a que el codigo sea mas facil de mantener. Por ejemplo, un controller no guarda datos directamente, sino que llama a un service. El service valida o prepara la informacion, y finalmente el repository se encarga de consultar o guardar en PostgreSQL.
-
----
 
 ## Funcionamiento General
 
@@ -65,7 +53,7 @@ La app no tiene frontend completo, por lo que se prueba usando Postman, Thunder 
 - `Auth`: guarda email, password y rol. La password entra al sistema, pero no se devuelve en el DTO de respuesta.
 - `Perfil`: contiene la informacion visible en la app, como nombre, biografia, altura, ocupacion y comuna.
 - `FotoPerfil`: permite agregar fotos, marcar una como principal y desactivar fotos.
-- `Swipe`: registra decisiones entre perfiles. Sus valores son `LIKE`, `DISLIKE` y `SKIP`.
+- `Swipe`: registra decisiones entre perfiles. Sus valores son `LIKE` y `DISLIKE`.
 - `Match`: representa la conexion entre dos perfiles.
 - `Notificacion`: guarda avisos importantes para un perfil.
 - `Reporte`: permite reportar perfiles. Sus estados son `EN_REVISION`, `RESUELTO` y `RECHAZADO`.
@@ -100,6 +88,7 @@ Antes de ejecutar, debe existir una base de datos llamada:
 
 ```text
 loveu_db
+-- CREATE DATABASE loveu_db;
 ```
 
 ---
@@ -127,6 +116,26 @@ Swipes:         POST /api/swipes, GET /api/swipes
 Matches:        POST /api/matches/verificar, GET /api/matches
 Notificaciones: POST /api/notificaciones, GET /api/notificaciones/perfil/{perfilDestinatarioId}
 Reportes:       POST /api/reportes, GET /api/reportes
+```
+
+Ejemplo simple para crear notificacion:
+
+```json
+{
+  "perfilDestinatarioId": 1,
+  "type": "MATCH",
+  "message": "Tienes un nuevo match"
+}
+```
+
+Ejemplo simple para crear reporte:
+
+```json
+{
+  "perfilReportanteId": 1,
+  "perfilReportadoId": 2,
+  "razonReporte": "Perfil con informacion falsa"
+}
 ```
 ---
 

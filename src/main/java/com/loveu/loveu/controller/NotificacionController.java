@@ -12,29 +12,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.loveu.loveu.dto.NotificacionDTO;
-import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.service.NotificacionService;
 
 @RestController
 @RequestMapping("/api/notificaciones")
 public class NotificacionController {
     private static final Logger log = LoggerFactory.getLogger(NotificacionController.class);
+
     @Autowired
     private NotificacionService notificacionService;
 
+    // Se usa body JSON para que sea mas facil probarlo en Postman.
     @PostMapping
-    public ResponseEntity<NotificacionDTO> crear(
-            @RequestParam Integer perfilDestinatarioId,
-            @RequestParam NotificacionType type,
-            @RequestParam String message) {
-        log.info("POST /api/notificaciones perfilDestinatarioId={} type={}", perfilDestinatarioId, type);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(notificacionService.crearNotificacion(perfilDestinatarioId, type, message));
+    public ResponseEntity<NotificacionDTO> crear(@RequestBody NotificacionDTO dto) {
+        log.info("POST /api/notificaciones perfilDestinatarioId={} type={}", dto.getPerfilDestinatarioId(), dto.getType());
+        return ResponseEntity.status(HttpStatus.CREATED).body(notificacionService.crearNotificacion(dto));
     }
 
     @GetMapping("/perfil/{perfilDestinatarioId}")
