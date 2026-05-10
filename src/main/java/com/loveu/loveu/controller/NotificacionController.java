@@ -27,10 +27,28 @@ public class NotificacionController {
     @Autowired
     private NotificacionService notificacionService;
 
-    // Se usa body JSON para que sea mas facil probarlo en Postman.
     @PostMapping
     public ResponseEntity<NotificacionDTO> crear(@RequestBody NotificacionDTO dto) {
-        log.info("POST /api/notificaciones perfilDestinatarioId={} type={}", dto.getPerfilDestinatarioId(), dto.getType());
+        log.info("POST /api/notificaciones");
+
+        if (dto == null) {
+            throw new RuntimeException("Los datos de la notificacion son obligatorios");
+        }
+
+        log.info("Notificacion perfilDestinatarioId={} type={}", dto.getPerfilDestinatarioId(), dto.getType());
+
+        if (dto.getPerfilDestinatarioId() == null) {
+            throw new RuntimeException("El perfilDestinatarioId es obligatorio");
+        }
+
+        if (dto.getType() == null) {
+            throw new RuntimeException("El tipo de notificacion es obligatorio");
+        }
+
+        if (dto.getMessage() == null || dto.getMessage().isBlank()) {
+            throw new RuntimeException("El mensaje de la notificacion es obligatorio");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(notificacionService.crearNotificacion(dto));
     }
 

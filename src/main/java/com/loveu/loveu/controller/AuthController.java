@@ -22,73 +22,59 @@ import com.loveu.loveu.service.AuthService;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    // Logger sirve para ver en consola que endpoint se esta usando.
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private AuthService authService;
 
-    // Recibe password, pero la respuesta nunca lo devuelve.
     @PostMapping
-    public ResponseEntity<?> crearAuth(@RequestBody AuthRequestDTO authDTO){
+    public ResponseEntity<AuthDTO> crearAuth(@RequestBody AuthRequestDTO authDTO){
         log.info("POST /api/auth");
 
-        // Validaciones simples antes de intentar guardar.
         if (authDTO == null) {
-            return ResponseEntity.badRequest().body("Los datos de auth son obligatorios");
+            throw new RuntimeException("Los datos de auth son obligatorios");
         }
 
         if (authDTO.getEmail() == null || authDTO.getEmail().isBlank()) {
-            return ResponseEntity.badRequest().body("El email es obligatorio");
+            throw new RuntimeException("El email es obligatorio");
         }
 
         if (!authDTO.getEmail().contains("@") || !authDTO.getEmail().contains(".")) {
-            return ResponseEntity.badRequest().body("El email debe tener un formato valido");
+            throw new RuntimeException("El email debe tener un formato valido");
         }
 
         if (authDTO.getPassword() == null || authDTO.getPassword().isBlank()) {
-            return ResponseEntity.badRequest().body("La contrasena es obligatoria");
+            throw new RuntimeException("La contrasena es obligatoria");
         }
 
         if (authDTO.getPassword().length() < 6) {
-            return ResponseEntity.badRequest().body("La contrasena debe tener al menos 6 caracteres");
+            throw new RuntimeException("La contrasena debe tener al menos 6 caracteres");
         }
 
         if (authDTO.getUsuarioId() == null) {
-            return ResponseEntity.badRequest().body("El usuarioId es obligatorio");
+            throw new RuntimeException("El usuarioId es obligatorio");
         }
 
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(authService.crearAuth(authDTO));
-        } catch (RuntimeException ex) {
-            // Si el service lanza error, lo mostramos como respuesta clara.
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.crearAuth(authDTO));
     }
 
-    // Login basico para el proyecto, sin token todavia.
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequestDTO authDTO){
+    public ResponseEntity<AuthDTO> login(@RequestBody AuthRequestDTO authDTO){
         log.info("POST /api/auth/login");
 
         if (authDTO == null) {
-            return ResponseEntity.badRequest().body("Los datos de login son obligatorios");
+            throw new RuntimeException("Los datos de login son obligatorios");
         }
 
         if (authDTO.getEmail() == null || authDTO.getEmail().isBlank()) {
-            return ResponseEntity.badRequest().body("El email es obligatorio");
+            throw new RuntimeException("El email es obligatorio");
         }
 
         if (authDTO.getPassword() == null || authDTO.getPassword().isBlank()) {
-            return ResponseEntity.badRequest().body("La contrasena es obligatoria");
+            throw new RuntimeException("La contrasena es obligatoria");
         }
 
-        try {
-            return ResponseEntity.ok(authService.login(authDTO));
-        } catch (RuntimeException ex) {
-            // Evita mostrar el error completo de Java al cliente.
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        return ResponseEntity.ok(authService.login(authDTO));
     }
 
     @GetMapping
@@ -103,7 +89,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.buscarPorEmail(email));
     }
 
-    // Se desactiva la cuenta para no perder el historial del usuario.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desactivarAuth(@PathVariable Integer id){
         log.info("DELETE /api/auth/{}", id);

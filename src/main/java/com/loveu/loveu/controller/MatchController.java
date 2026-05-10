@@ -28,6 +28,15 @@ public class MatchController {
     public ResponseEntity<Boolean> verificarYCrearMatch(
         @RequestParam Integer perfilAId, @RequestParam Integer perfilBId) {
         log.info("POST /api/matches/verificar perfilAId={} perfilBId={}", perfilAId, perfilBId);
+
+        if (perfilAId == null || perfilBId == null) {
+            throw new RuntimeException("Los dos perfiles son obligatorios");
+        }
+
+        if (perfilAId.equals(perfilBId)) {
+            throw new RuntimeException("No se puede crear match con el mismo perfil");
+        }
+
         return ResponseEntity.ok(matchService.verificarYCrearMatch(perfilAId, perfilBId));
     }
 
@@ -46,6 +55,7 @@ public class MatchController {
     @PatchMapping("/{id}/deshacer")
     public ResponseEntity<Void> deshacerMatch(@PathVariable Integer id) {
         log.info("PATCH /api/matches/{}/deshacer", id);
+
         matchService.deshacerMatch(id);
         return ResponseEntity.noContent().build();
     }

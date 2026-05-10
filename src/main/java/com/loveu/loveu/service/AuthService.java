@@ -21,7 +21,6 @@ public class AuthService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // Convierte la entidad Auth a DTO para no devolver password.
     private AuthDTO toDTO(Auth auth){
         return AuthDTO.builder()
                 .email(auth.getEmail())
@@ -58,7 +57,6 @@ public class AuthService {
         Auth auth = authRepository.findByEmail(authDTO.getEmail())
                 .orElseThrow(() -> new RuntimeException("Credenciales incorrectas"));
 
-        // No decimos si fallo el email o la password por seguridad basica.
         if (!auth.isActivo() || !auth.getPassword().equals(authDTO.getPassword())) {
             throw new RuntimeException("Credenciales incorrectas");
         }

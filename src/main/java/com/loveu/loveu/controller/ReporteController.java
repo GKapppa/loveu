@@ -28,10 +28,24 @@ public class ReporteController {
     @Autowired
     private ReporteService reporteService;
 
-    // Se recibe JSON para no mandar datos largos en la URL.
     @PostMapping
     public ResponseEntity<ReporteDTO> crear(@RequestBody ReporteDTO dto) {
-        log.info("POST /api/reportes reportante={} reportado={}", dto.getPerfilReportanteId(), dto.getPerfilReportadoId());
+        log.info("POST /api/reportes");
+
+        if (dto == null) {
+            throw new RuntimeException("Los datos del reporte son obligatorios");
+        }
+
+        log.info("Reporte reportante={} reportado={}", dto.getPerfilReportanteId(), dto.getPerfilReportadoId());
+
+        if (dto.getPerfilReportanteId() == null || dto.getPerfilReportadoId() == null) {
+            throw new RuntimeException("El perfil reportante y reportado son obligatorios");
+        }
+
+        if (dto.getRazonReporte() == null || dto.getRazonReporte().isBlank()) {
+            throw new RuntimeException("La razon del reporte es obligatoria");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reporteService.crearReporte(dto.getPerfilReportanteId(), dto.getPerfilReportadoId(), dto.getRazonReporte()));
     }

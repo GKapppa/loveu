@@ -49,7 +49,6 @@ public class ReporteService {
             .perfilReportante(perfilReportante)
             .perfilReportado(perfilReportado)
             .razonReporte(razonReporte)
-            // estadoReporte y fechaReporte se asignan automáticamente en @PrePersist
             .build();
 
         reporte = reporteRepository.save(reporte);
