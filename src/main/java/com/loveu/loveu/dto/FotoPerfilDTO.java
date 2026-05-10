@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class FotoPerfilDTO {
+    private Integer fotoId;
     private Integer perfilId;
     private String urlFoto;
     private boolean principal;

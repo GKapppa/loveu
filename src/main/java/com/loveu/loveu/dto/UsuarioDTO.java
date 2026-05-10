@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UsuarioDTO {
-
     private String primerNombre;
     private String primerApellido;
     private LocalDate fechaNacimiento;

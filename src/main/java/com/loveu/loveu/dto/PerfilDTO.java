@@ -14,6 +14,5 @@ public class PerfilDTO {
     private String biografia;
     private Integer alturaCm;
     private Integer usuarioId;
-    private Integer comunaId;
     private String ocupacion;
 }
