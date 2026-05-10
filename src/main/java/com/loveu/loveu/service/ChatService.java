@@ -1,19 +1,19 @@
 package com.loveu.loveu.service;
 
-import com.loveu.loveu.dto.MensajeDTO;
-import com.loveu.loveu.model.Match;
-import com.loveu.loveu.model.Mensaje;
-import com.loveu.loveu.model.Perfil;
-import com.loveu.loveu.repository.MatchRepository;
-import com.loveu.loveu.repository.MensajeRepository;
-import com.loveu.loveu.repository.PerfilRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.loveu.loveu.dto.MensajeDTO;
+import com.loveu.loveu.model.Mensaje;
+import com.loveu.loveu.model.Perfil;
+import com.loveu.loveu.repository.MatchRepository;
+import com.loveu.loveu.repository.MensajeRepository;
+import com.loveu.loveu.repository.PerfilRepository;
 
 @Service
 public class ChatService {
@@ -29,15 +29,10 @@ public class ChatService {
     private PerfilRepository perfilRepository;
 
     public MensajeDTO enviarMensaje(MensajeDTO dto) {
-        log.info("Enviando mensaje en matchId={} desde perfilEmisorId={}", dto.getMatchId(), dto.getPerfilEmisorId());
-
+ 
         if (dto.getPerfilEmisorId().equals(dto.getPerfilReceptorId())) {
             throw new RuntimeException("El emisor y el receptor no pueden ser el mismo perfil");
         }
-
-        Match match = matchRepository.findById(dto.getMatchId())
-            .orElseThrow(() -> new RuntimeException("Match no encontrado: " + dto.getMatchId()));
-
         Perfil perfilEmisor = perfilRepository.findById(dto.getPerfilEmisorId())
             .orElseThrow(() -> new RuntimeException("Perfil emisor no encontrado: " + dto.getPerfilEmisorId()));
 
@@ -45,7 +40,6 @@ public class ChatService {
             .orElseThrow(() -> new RuntimeException("Perfil receptor no encontrado: " + dto.getPerfilReceptorId()));
 
         Mensaje mensaje = Mensaje.builder()
-            .match(match)
             .perfilEmisor(perfilEmisor)
             .perfilReceptor(perfilReceptor)
             .contenido(dto.getContenido())
@@ -86,7 +80,6 @@ public class ChatService {
 
     private MensajeDTO toDTO(Mensaje m) {
         return MensajeDTO.builder()
-            .matchId(m.getMatch().getId())
             .perfilEmisorId(m.getPerfilEmisor().getId())
             .perfilReceptorId(m.getPerfilReceptor().getId())
             .contenido(m.getContenido())

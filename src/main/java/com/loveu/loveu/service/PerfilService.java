@@ -78,14 +78,17 @@ public class PerfilService {
         Perfil perfil = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
-        Comuna comuna = comunaRepository.findById(dto.getComunaId())
-                .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
-
         perfil.setNombreVisible(dto.getNombreVisible());
         perfil.setBiografia(dto.getBiografia());
         perfil.setOcupacion(dto.getOcupacion());
         perfil.setAlturaCm(dto.getAlturaCm());
-        perfil.setComuna(comuna);
+
+        if (dto.getComunaId() != null) {
+            Comuna comuna = comunaRepository.findById(dto.getComunaId())
+                    .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+
+            perfil.setComuna(comuna);
+        }
 
         perfil = perfilRepository.save(perfil);
         return toDTO(perfil);

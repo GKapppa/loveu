@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MensajeDTO {
-    private Integer matchId;
     private Integer perfilEmisorId;
     private Integer perfilReceptorId;
     private String contenido;
