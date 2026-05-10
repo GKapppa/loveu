@@ -50,6 +50,6 @@ public class Usuario {
     private String telefono;
 
     @Column(nullable = false)
-    private Boolean activo = true;
+    private boolean activo = true;
 
 }

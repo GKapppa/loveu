@@ -12,11 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class FotoPerfilDTO {
-    private Integer id;
     private Integer perfilId;
     private String urlFoto;
     private boolean principal;
     private Integer orden;
     private LocalDateTime fechaSubida;
-    private boolean activo;
 }

@@ -1,23 +1,31 @@
 package com.loveu.loveu.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.loveu.loveu.dto.NotificacionDTO;
 import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.service.NotificacionService;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/notificaciones")
-@RequiredArgsConstructor
 public class NotificacionController {
     private static final Logger log = LoggerFactory.getLogger(NotificacionController.class);
-    private final NotificacionService notificacionService;
+    @Autowired
+    private NotificacionService notificacionService;
 
     @PostMapping
     public ResponseEntity<NotificacionDTO> crear(
@@ -42,7 +50,7 @@ public class NotificacionController {
     }
 
     @GetMapping("/perfil/{perfilDestinatarioId}/conteo")
-    public ResponseEntity<Long> contarNoLeidas(@PathVariable Integer perfilDestinatarioId) {
+    public ResponseEntity<Integer> contarNoLeidas(@PathVariable Integer perfilDestinatarioId) {
         log.info("GET /api/notificaciones/perfil/{}/conteo", perfilDestinatarioId);
         return ResponseEntity.ok(notificacionService.contarNoLeidas(perfilDestinatarioId));
     }

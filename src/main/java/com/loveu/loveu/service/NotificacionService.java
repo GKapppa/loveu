@@ -6,21 +6,24 @@ import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.NotificacionRepository;
 import com.loveu.loveu.repository.PerfilRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
-@RequiredArgsConstructor
 public class NotificacionService {
     private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
-    private final NotificacionRepository notificacionRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private NotificacionRepository notificacionRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public NotificacionDTO crearNotificacion(Integer perfilDestinatarioId, NotificacionType type, String message) {
         log.info("Creando notificación tipo={} para perfilDestinatarioId={}", type, perfilDestinatarioId);
@@ -52,8 +55,8 @@ public class NotificacionService {
             .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
-    public long contarNoLeidas(Integer perfilDestinatarioId) {
-        long count = notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId).size();
+    public Integer contarNoLeidas(Integer perfilDestinatarioId) {
+        Integer count = notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId).size();
         log.info("Perfil id={} tiene {} notificaciones no leídas", perfilDestinatarioId, count);
         return count;
     }
@@ -73,8 +76,6 @@ public class NotificacionService {
 
     private NotificacionDTO toDTO(Notificacion n) {
         return NotificacionDTO.builder()
-            .id(n.getId())
-            .perfilDestinatario(n.getPerfilDestinatario().getId())
             .type(n.getType())
             .message(n.getMessage())
             .read(n.isRead())

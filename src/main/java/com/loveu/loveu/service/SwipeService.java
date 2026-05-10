@@ -2,6 +2,7 @@ package com.loveu.loveu.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.loveu.loveu.dto.SwipeDTO;
@@ -10,16 +11,15 @@ import com.loveu.loveu.model.Swipe;
 import com.loveu.loveu.repository.PerfilRepository;
 import com.loveu.loveu.repository.SwipeRepository;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class SwipeService {
 
-    private final SwipeRepository swipeRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private SwipeRepository swipeRepository;
 
-    // Registra un swipe realizado por un perfil hacia otro perfil.
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     public SwipeDTO registrarSwipe(SwipeDTO dto) {
 
         if (swipeRepository.existsByPerfilOrigenIdAndPerfilDestinoId(
@@ -45,32 +45,35 @@ public class SwipeService {
         swipe = swipeRepository.save(swipe);
 
         return SwipeDTO.builder()
-                .id(swipe.getId())
                 .perfilOrigenId(swipe.getPerfilOrigen().getId())
                 .perfilDestinoId(swipe.getPerfilDestino().getId())
                 .decision(swipe.getDecision())
                 .fecha(swipe.getFecha())
-                .activo(swipe.isActivo())
                 .build();
     }
 
-    // Obtiene todos los swipes registrados.
-    public List<Swipe> obtenerTodos() {
-        return swipeRepository.findAll();
+    public List<SwipeDTO> obtenerTodos() {
+        return swipeRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    // Obtiene todos los swipes realizados por un perfil origen.
-    public List<Swipe> obtenerPorPerfilOrigen(Integer perfilOrigenId) {
-        return swipeRepository.findByPerfilOrigenId(perfilOrigenId);
+    public List<SwipeDTO> obtenerPorPerfilOrigen(Integer perfilOrigenId) {
+        return swipeRepository.findByPerfilOrigenId(perfilOrigenId).stream().map(this::toDTO).toList();
     }
 
-    // Obtiene todos los swipes recibidos por un perfil destino.
-    public List<Swipe> obtenerPorPerfilDestino(Integer perfilDestinoId) {
-        return swipeRepository.findByPerfilDestinoId(perfilDestinoId);
+    public List<SwipeDTO> obtenerPorPerfilDestino(Integer perfilDestinoId) {
+        return swipeRepository.findByPerfilDestinoId(perfilDestinoId).stream().map(this::toDTO).toList();
     }
 
-    // Elimina un swipe por su id.
     public void eliminarSwipe(Integer id) {
         swipeRepository.deleteById(id);
+    }
+
+    private SwipeDTO toDTO(Swipe swipe) {
+        return SwipeDTO.builder()
+                .perfilOrigenId(swipe.getPerfilOrigen().getId())
+                .perfilDestinoId(swipe.getPerfilDestino().getId())
+                .decision(swipe.getDecision())
+                .fecha(swipe.getFecha())
+                .build();
     }
 }

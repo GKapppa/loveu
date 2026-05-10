@@ -59,4 +59,51 @@ public class Preferencia {
     @Column(nullable = false)
     private boolean activo = true;
 
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
+
+    public String getGeneroDeseado() {
+        return generoDeseado;
+    }
+
+    public void setGeneroDeseado(String generoDeseado) {
+        this.generoDeseado = generoDeseado;
+    }
+
+    public Integer getEdadMinima() {
+        return edadMinima;
+    }
+
+    public void setEdadMinima(Integer edadMinima) {
+        this.edadMinima = edadMinima;
+    }
+
+    public Integer getEdadMaxima() {
+        return edadMaxima;
+    }
+
+    public void setEdadMaxima(Integer edadMaxima) {
+        this.edadMaxima = edadMaxima;
+    }
+
+    public Integer getDistanciaMaximaKm() {
+        return distanciaMaximaKm;
+    }
+
+    public void setDistanciaMaximaKm(Integer distanciaMaximaKm) {
+        this.distanciaMaximaKm = distanciaMaximaKm;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 }

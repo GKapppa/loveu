@@ -1,26 +1,29 @@
 package com.loveu.loveu.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.loveu.loveu.dto.MatchDTO;
 import com.loveu.loveu.model.Match;
 import com.loveu.loveu.model.MatchStatus;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.MatchRepository;
 import com.loveu.loveu.repository.PerfilRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class MatchService {
     private static final Logger log = LoggerFactory.getLogger(MatchService.class);
 
-    private final MatchRepository matchRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private MatchRepository matchRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     /**
      * Crea un match entre dos perfiles si no existe ya uno.
@@ -29,7 +32,6 @@ public class MatchService {
     public boolean verificarYCrearMatch(Integer perfilAId, Integer perfilBId) {
         log.info("Verificando like mutuo entre perfilA={} y perfilB={}", perfilAId, perfilBId);
 
-        // Revisar si ya existe un match entre estos dos perfiles
         boolean yaExiste = matchRepository
             .findByPerfilAIdOrPerfilBId(perfilAId, perfilBId)
             .stream()
@@ -83,10 +85,8 @@ public class MatchService {
 
     private MatchDTO toDTO(Match m) {
         return MatchDTO.builder()
-            .id(m.getId())
-            .perfilA(m.getPerfilA().getId())
-            .perfilB(m.getPerfilB().getId())
-            .status(m.getStatus())
+            .perfilAId(m.getPerfilA().getId())
+            .perfilBId(m.getPerfilB().getId())
             .matchedAt(m.getMatchedAt())
             .build();
     }

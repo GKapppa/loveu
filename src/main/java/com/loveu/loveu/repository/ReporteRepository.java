@@ -12,4 +12,8 @@ import java.util.List;
 public interface ReporteRepository extends JpaRepository<Reporte, Integer> {
     List<Reporte> findByEstadoReporte(EstadoReporte estadoReporte);
     List<Reporte> findByPerfilReportadoId(Integer perfilId);
+
+    // Para revisar historial de reportes en moderacion.
+    List<Reporte> findByPerfilReportanteId(Integer perfilId);
+    List<Reporte> findByPerfilReportadoIdAndActivoTrue(Integer perfilId);
 }

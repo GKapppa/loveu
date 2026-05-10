@@ -2,9 +2,9 @@ package com.loveu.loveu.controller;
 
 import com.loveu.loveu.dto.MensajeDTO;
 import com.loveu.loveu.service.ChatService;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chat")
-@RequiredArgsConstructor
 public class ChatController {
     private static final Logger log = LoggerFactory.getLogger(ChatController.class);
-    private final ChatService chatService;
+    @Autowired
+    private ChatService chatService;
 
     @PostMapping("/mensajes")
     public ResponseEntity<MensajeDTO> enviarMensaje(@RequestBody MensajeDTO dto) {

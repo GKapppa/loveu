@@ -14,10 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SwipeDTO {
-    private Integer id;
     private Integer perfilOrigenId;
     private Integer perfilDestinoId;
     private DecisionSwipe decision;
     private LocalDateTime fecha;
-    private boolean activo;
 }

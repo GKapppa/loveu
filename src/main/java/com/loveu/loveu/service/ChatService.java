@@ -7,22 +7,26 @@ import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.MatchRepository;
 import com.loveu.loveu.repository.MensajeRepository;
 import com.loveu.loveu.repository.PerfilRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ChatService {
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
-    private final MensajeRepository mensajeRepository;
-    private final MatchRepository matchRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private MensajeRepository mensajeRepository;
+
+    @Autowired
+    private MatchRepository matchRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public MensajeDTO enviarMensaje(MensajeDTO dto) {
         log.info("Enviando mensaje en matchId={} desde perfilEmisorId={}", dto.getMatchId(), dto.getPerfilEmisorId());
@@ -82,7 +86,6 @@ public class ChatService {
 
     private MensajeDTO toDTO(Mensaje m) {
         return MensajeDTO.builder()
-            .id(m.getId())
             .matchId(m.getMatch().getId())
             .perfilEmisorId(m.getPerfilEmisor().getId())
             .perfilReceptorId(m.getPerfilReceptor().getId())

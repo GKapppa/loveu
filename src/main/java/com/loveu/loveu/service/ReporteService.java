@@ -1,26 +1,29 @@
 package com.loveu.loveu.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.loveu.loveu.dto.ReporteDTO;
 import com.loveu.loveu.model.EstadoReporte;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.model.Reporte;
 import com.loveu.loveu.repository.PerfilRepository;
 import com.loveu.loveu.repository.ReporteRepository;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ReporteService {
     private static final Logger log = LoggerFactory.getLogger(ReporteService.class);
 
-    private final ReporteRepository reporteRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private ReporteRepository reporteRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public ReporteDTO crearReporte(Integer perfilReportanteId, Integer perfilReportadoId, String razonReporte) {
         log.info("Creando reporte: reportante={} reportado={} razon={}", perfilReportanteId, perfilReportadoId, razonReporte);
@@ -29,7 +32,6 @@ public class ReporteService {
             throw new RuntimeException("No puedes reportarte a ti mismo");
         }
 
-        // Verificar si ya existe un reporte activo entre estos perfiles
         boolean yaReportado = reporteRepository.findByPerfilReportadoId(perfilReportadoId)
             .stream()
             .anyMatch(r -> r.getPerfilReportante().getId().equals(perfilReportanteId) && r.isActivo());
@@ -37,7 +39,6 @@ public class ReporteService {
         if (yaReportado) {
             throw new RuntimeException("Ya has reportado a este perfil anteriormente");
         }
-
         Perfil perfilReportante = perfilRepository.findById(perfilReportanteId)
             .orElseThrow(() -> new RuntimeException("Perfil reportante no encontrado: " + perfilReportanteId));
 
@@ -91,13 +92,10 @@ public class ReporteService {
 
     private ReporteDTO toDTO(Reporte r) {
         return ReporteDTO.builder()
-            .id(r.getId())
-            .perfilReportante(r.getPerfilReportante().getId())
-            .perfilReportado(r.getPerfilReportado().getId())
+            .perfilReportanteId(r.getPerfilReportante().getId())
+            .perfilReportadoId(r.getPerfilReportado().getId())
             .razonReporte(r.getRazonReporte())
-            .estadoReporte(r.getEstadoReporte())
             .fechaReporte(r.getFechaReporte())
-            .activo(r.isActivo())
             .build();
     }
 }
