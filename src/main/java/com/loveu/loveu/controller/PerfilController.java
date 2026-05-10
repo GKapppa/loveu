@@ -27,10 +27,22 @@ public class PerfilController {
     @Autowired
     private PerfilService perfilService;
 
-    // El perfil es lo que realmente se muestra en la app.
     @PostMapping
     public ResponseEntity<PerfilDTO> crearPerfil(@RequestBody PerfilDTO dto){
         log.info("POST /api/perfiles");
+
+        if (dto == null) {
+            throw new RuntimeException("Los datos del perfil son obligatorios");
+        }
+
+        if (dto.getUsuarioId() == null) {
+            throw new RuntimeException("El usuarioId es obligatorio");
+        }
+
+        if (dto.getComunaId() == null) {
+            throw new RuntimeException("El comunaId es obligatorio");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(perfilService.crearPerfil(dto));
     }
 
@@ -64,7 +76,6 @@ public class PerfilController {
         return ResponseEntity.ok(perfilService.actualizarPerfil(id, dto));
     }
 
-    // Baja logica para no perder historial del perfil.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desactivarPerfil(@PathVariable Integer id){
         log.info("DELETE /api/perfiles/{}", id);

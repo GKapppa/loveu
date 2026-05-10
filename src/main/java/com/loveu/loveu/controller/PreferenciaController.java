@@ -27,10 +27,22 @@ public class PreferenciaController {
     @Autowired
     private PreferenciaService preferenciaService;
 
-    // Las preferencias son filtros de busqueda, no datos publicos del perfil.
     @PostMapping
     public ResponseEntity<PreferenciaDTO> crearPreferencia(@RequestBody PreferenciaDTO dto){
         log.info("POST /api/preferencias");
+
+        if (dto == null) {
+            throw new RuntimeException("Los datos de preferencia son obligatorios");
+        }
+
+        if (dto.getPerfilId() == null) {
+            throw new RuntimeException("El perfilId es obligatorio");
+        }
+
+        if (dto.getEdadMinima() == null || dto.getEdadMaxima() == null) {
+            throw new RuntimeException("Las edades son obligatorias");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(preferenciaService.crearPreferencia(dto));
     }
 
@@ -51,10 +63,10 @@ public class PreferenciaController {
             @PathVariable Integer perfilId,
             @RequestBody PreferenciaDTO dto){
         log.info("PUT /api/preferencias/perfil/{}", perfilId);
+
         return ResponseEntity.ok(preferenciaService.actualizarPreferencia(perfilId, dto));
     }
 
-    // Se desactiva por perfil porque cada perfil tiene solo una preferencia.
     @DeleteMapping("/perfil/{perfilId}")
     public ResponseEntity<Void> desactivarPreferencia(@PathVariable Integer perfilId){
         log.info("DELETE /api/preferencias/perfil/{}", perfilId);

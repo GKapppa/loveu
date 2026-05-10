@@ -43,7 +43,6 @@ public class ChatService {
             .perfilEmisor(perfilEmisor)
             .perfilReceptor(perfilReceptor)
             .contenido(dto.getContenido())
-            // sentAt se asigna automáticamente en @PrePersist
             .build();
 
         mensaje = mensajeRepository.save(mensaje);

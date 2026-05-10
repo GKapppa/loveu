@@ -28,6 +28,19 @@ public class SwipeController {
     @PostMapping
     public ResponseEntity<SwipeDTO> registrarSwipe(@RequestBody SwipeDTO dto) {
         log.info("POST /api/swipes");
+
+        if (dto == null) {
+            throw new RuntimeException("Los datos del swipe son obligatorios");
+        }
+
+        if (dto.getPerfilOrigenId() == null || dto.getPerfilDestinoId() == null) {
+            throw new RuntimeException("Los perfiles origen y destino son obligatorios");
+        }
+
+        if (dto.getDecision() == null) {
+            throw new RuntimeException("La decision del swipe es obligatoria");
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(swipeService.registrarSwipe(dto));
     }
 

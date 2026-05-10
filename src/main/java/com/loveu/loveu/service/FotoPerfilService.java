@@ -20,7 +20,6 @@ public class FotoPerfilService {
     @Autowired
     private PerfilRepository perfilRepository;
 
-    // Se devuelve fotoId porque sirve para marcar principal o desactivar.
     private FotoPerfilDTO toDTO(FotoPerfil fotoPerfil){
         return FotoPerfilDTO.builder()
                 .fotoId(fotoPerfil.getId())
@@ -62,7 +61,6 @@ public class FotoPerfilService {
         FotoPerfil fotoPerfil = fotoPerfilRepository.findById(fotoId).orElseThrow(() -> new RuntimeException("Foto no encontrada con id:" + fotoId));
         List<FotoPerfil> fotosPerfil = fotoPerfilRepository.findByPerfilIdAndActivoTrueOrderByOrdenAsc(fotoPerfil.getPerfil().getId());
 
-        // Primero quitamos la marca principal de todas las fotos del perfil.
         for (FotoPerfil foto : fotosPerfil) {
             foto.setPrincipal(false);
         }
