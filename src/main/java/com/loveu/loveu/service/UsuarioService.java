@@ -19,6 +19,7 @@ public class UsuarioService {
     // Convertimos la entidad JPA A DTO
     private UsuarioDTO toDTO(Usuario usuario){
         return UsuarioDTO.builder()
+                .usuarioId(usuario.getId())
                 .primerNombre(usuario.getPrimerNombre())
                 .primerApellido(usuario.getPrimerApellido())
                 .fechaNacimiento(usuario.getFechaNacimiento())

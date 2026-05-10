@@ -27,7 +27,6 @@ public class ComunaService {
 
     public ComunaDTO buscarPorID(Integer id){
         Comuna comuna = comunaRepository.findById(id).orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
-
         return toDTO(comuna);
     }
 }

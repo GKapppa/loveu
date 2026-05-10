@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.loveu.loveu.dto.PerfilDTO;
+import com.loveu.loveu.model.Comuna;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.model.Usuario;
 import com.loveu.loveu.repository.ComunaRepository;
@@ -33,6 +34,9 @@ public class PerfilService {
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        Comuna comuna = comunaRepository.findById(dto.getComunaId())
+                .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+
         Perfil perfil = Perfil.builder()
                 .nombreVisible(dto.getNombreVisible())
                 .biografia(dto.getBiografia())
@@ -40,6 +44,7 @@ public class PerfilService {
                 .alturaCm(dto.getAlturaCm())
                 .activo(true)
                 .usuario(usuario)
+                .comuna(comuna)
                 .build();
 
         perfil = perfilRepository.save(perfil);
@@ -78,6 +83,13 @@ public class PerfilService {
         perfil.setOcupacion(dto.getOcupacion());
         perfil.setAlturaCm(dto.getAlturaCm());
 
+        if (dto.getComunaId() != null) {
+            Comuna comuna = comunaRepository.findById(dto.getComunaId())
+                    .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+
+            perfil.setComuna(comuna);
+        }
+
         perfil = perfilRepository.save(perfil);
         return toDTO(perfil);
     }
@@ -101,6 +113,7 @@ public class PerfilService {
                 .ocupacion(perfil.getOcupacion())
                 .alturaCm(perfil.getAlturaCm())
                 .usuarioId(perfil.getUsuario().getId())
+                .comunaId(perfil.getComuna().getId())
                 .build();
     }
 }

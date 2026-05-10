@@ -1,48 +1,167 @@
 # LoveU - Backend
 
-LoveU es un proyecto backend desarrollado con Spring Boot orientado a una aplicación de tipo match entre perfiles.  
-El sistema permite modelar usuarios, autenticación, perfiles, preferencias de búsqueda, fotos, swipes, matches, mensajes, reportes y notificaciones.
+LoveU es un backend hecho con Spring Boot para una aplicacion de citas tipo Tinder. El proyecto permite registrar usuarios, crear perfiles, guardar fotos, realizar swipes, generar matches, enviar notificaciones y manejar reportes.
 
-Este proyecto forma parte de una actividad académica enfocada en el desarrollo y operación de microservicios, persistencia con base de datos relacional y buenas prácticas de arquitectura backend.
-
----
-
-## Objetivo del proyecto
-
-El objetivo principal de LoveU es construir una base backend capaz de representar el flujo principal de una aplicación de matching:
-
-1. Un usuario se registra en la plataforma.
-2. El usuario crea su perfil público.
-3. El perfil configura sus preferencias de búsqueda.
-4. El perfil puede agregar fotos.
-5. El perfil puede realizar swipes sobre otros perfiles.
-6. Si dos perfiles se dan like mutuamente, se genera un match.
-7. Los perfiles con match pueden intercambiar mensajes.
-8. Los usuarios pueden reportar perfiles inapropiados o sospechosos.
-9. El sistema puede generar notificaciones según eventos importantes.
+El objetivo principal es demostrar el funcionamiento de una API REST conectada a una base de datos relacional, usando una estructura ordenada por capas.
 
 ---
 
-## Tecnologías utilizadas
+## Integrantes
 
-- Java
+- Integrante 1: Daniel Pinto
+- Integrante 2: Diego SantiBañez
+
+---
+
+## Tecnologias Utilizadas
+
+- Java 21
 - Spring Boot
+- Spring Web
 - Spring Data JPA
 - PostgreSQL
-- Jakarta Validation
-- Lombok
 - Maven
+- Lombok
+- Jakarta Validation
 
 ---
 
-## Arquitectura general
+## Como Esta Estructurado
 
-El proyecto sigue una estructura por capas:
+El proyecto esta organizado por capas para separar responsabilidades:
 
 ```text
-controller  → recibe las peticiones HTTP
-service     → contiene la lógica de negocio
-repository  → comunica con la base de datos
-model       → representa las entidades persistentes
-dto         → transporta datos entre capas
-exception   → maneja errores personalizados
+controller  -> recibe las peticiones HTTP y responde al cliente
+service     -> contiene la logica principal del sistema
+repository  -> conecta la aplicacion con la base de datos
+model       -> representa las entidades y tablas
+dto         -> controla que datos entran y salen por la API
+docs        -> guarda scripts o informacion de base de datos
+```
+
+Esta estructura ayuda a que el codigo sea mas facil de mantener. Por ejemplo, un controller no guarda datos directamente, sino que llama a un service. El service valida o prepara la informacion, y finalmente el repository se encarga de consultar o guardar en PostgreSQL.
+
+---
+
+## Funcionamiento General
+
+El flujo principal de la aplicacion es:
+
+1. Se crea un usuario con sus datos personales.
+2. Se crea un registro de Auth con email, password y rol.
+3. El usuario crea un perfil visible dentro de la app.
+4. El perfil puede agregar fotos.
+5. Un perfil puede dar LIKE, DISLIKE o SKIP a otro perfil.
+6. Si dos perfiles coinciden, se puede crear un match.
+7. El sistema permite generar notificaciones y reportes.
+
+La app no tiene frontend completo, por lo que se prueba usando Postman, Thunder Client o consultas SQL.
+
+---
+
+## Modulos Principales
+
+- `Usuario`: guarda datos personales como nombre, apellido, fecha de nacimiento y telefono.
+- `Auth`: guarda email, password y rol. La password entra al sistema, pero no se devuelve en el DTO de respuesta.
+- `Perfil`: contiene la informacion visible en la app, como nombre, biografia, altura, ocupacion y comuna.
+- `FotoPerfil`: permite agregar fotos, marcar una como principal y desactivar fotos.
+- `Swipe`: registra decisiones entre perfiles. Sus valores son `LIKE`, `DISLIKE` y `SKIP`.
+- `Match`: representa la conexion entre dos perfiles.
+- `Notificacion`: guarda avisos importantes para un perfil.
+- `Reporte`: permite reportar perfiles. Sus estados son `EN_REVISION`, `RESUELTO` y `RECHAZADO`.
+
+---
+
+## Configuracion
+
+El archivo principal de configuracion esta en:
+
+```text
+src/main/resources/application.properties
+```
+
+Ejemplo:
+
+```properties
+spring.application.name=loveu
+server.port=8080
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/loveu_db
+spring.datasource.username=postgres
+spring.datasource.password=TU_PASSWORD
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+```
+
+Antes de ejecutar, debe existir una base de datos llamada:
+
+```text
+loveu_db
+```
+
+---
+
+## Como Ejecutar
+
+```bash
+.\mvnw.cmd spring-boot:run
+```
+La API queda disponible en:
+
+```text
+http://localhost:8080
+```
+
+---
+## Endpoints Importantes
+
+```text
+Usuarios:       POST /api/usuarios, GET /api/usuarios
+Auth:           POST /api/auth, POST /api/auth/login
+Perfiles:       POST /api/perfiles, GET /api/perfiles
+Fotos:          POST /api/fotoperfil, GET /api/fotoperfil/perfil/{perfilId}
+Swipes:         POST /api/swipes, GET /api/swipes
+Matches:        POST /api/matches/verificar, GET /api/matches
+Notificaciones: POST /api/notificaciones, GET /api/notificaciones/perfil/{perfilDestinatarioId}
+Reportes:       POST /api/reportes, GET /api/reportes
+```
+---
+
+## Datos Base Necesarios
+
+Para crear perfiles se necesita tener al menos una region y una comuna en la base de datos.
+
+```sql
+INSERT INTO regiones (nombre_region, abreviacion)
+VALUES ('Region Metropolitana', 'RM');
+
+INSERT INTO comunas (nombre_comuna, region_id)
+VALUES ('Santiago', 1);
+```
+
+---
+
+## Consultas Utiles
+
+```sql
+SELECT * FROM usuarios ORDER BY id;
+SELECT * FROM perfiles ORDER BY id;
+SELECT * FROM foto_perfil ORDER BY id;
+SELECT * FROM swipes ORDER BY id;
+SELECT * FROM matches ORDER BY id;
+SELECT * FROM notifications ORDER BY id;
+SELECT * FROM reportes ORDER BY id;
+```
+
+---
+
+## Observaciones
+
+- El proyecto usa DTO para controlar que informacion se muestra al cliente.
+- Algunos borrados se manejan como baja logica, cambiando el campo `activo`.
+- El login actual es basico y no usa JWT ni Spring Security.
+- Para una aplicacion real, las passwords deberian guardarse encriptadas.
+- El proyecto esta pensado para demostrar estructura backend, relaciones entre entidades y persistencia con PostgreSQL.
