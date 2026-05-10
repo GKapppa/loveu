@@ -6,25 +6,24 @@ import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.NotificacionRepository;
 import com.loveu.loveu.repository.PerfilRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-// @Service indica que esta clase contiene logica de negocio.
+
 @Service
+// Genera constructor para inyectar repositories final.
+@RequiredArgsConstructor
 public class NotificacionService {
     // Logger para registrar operaciones sin depender de System.out.println.
     private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
-    @Autowired
-    private NotificacionRepository notificacionRepository;
-
-    @Autowired
-    private PerfilRepository perfilRepository;
+    private final NotificacionRepository notificacionRepository;
+    private final PerfilRepository perfilRepository;
 
     public NotificacionDTO crearNotificacion(Integer perfilDestinatarioId, NotificacionType type, String message) {
         log.info("Creando notificación tipo={} para perfilDestinatarioId={}", type, perfilDestinatarioId);
