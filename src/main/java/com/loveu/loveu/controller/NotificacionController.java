@@ -20,23 +20,19 @@ import com.loveu.loveu.dto.NotificacionDTO;
 import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.service.NotificacionService;
 
-// Controlador REST para crear, consultar y marcar notificaciones.
 @RestController
 @RequestMapping("/api/notificaciones")
 public class NotificacionController {
-    // Logger para ver en consola que endpoint se llamo y con que datos principales.
     private static final Logger log = LoggerFactory.getLogger(NotificacionController.class);
     @Autowired
     private NotificacionService notificacionService;
 
     @PostMapping
     public ResponseEntity<NotificacionDTO> crear(
-            // @RequestParam obtiene valores simples enviados como parametros.
             @RequestParam Integer perfilDestinatarioId,
             @RequestParam NotificacionType type,
             @RequestParam String message) {
         log.info("POST /api/notificaciones perfilDestinatarioId={} type={}", perfilDestinatarioId, type);
-        // CREATED devuelve codigo HTTP 201 para indicar creacion exitosa.
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(notificacionService.crearNotificacion(perfilDestinatarioId, type, message));
     }
@@ -59,7 +55,6 @@ public class NotificacionController {
         return ResponseEntity.ok(notificacionService.contarNoLeidas(perfilDestinatarioId));
     }
 
-    // PATCH cambia solo el estado de lectura de la notificacion.
     @PatchMapping("/{id}/leida")
     public ResponseEntity<Void> marcarComoLeida(@PathVariable Integer id) {
         log.info("PATCH /api/notificaciones/{}/leida", id);

@@ -12,4 +12,8 @@ import com.loveu.loveu.model.FotoPerfil;
 public interface FotoPerfilRepository extends JpaRepository<FotoPerfil, Integer> {
     List<FotoPerfil> findByPerfilId(Integer perfilId);
     Optional<FotoPerfil> findByPerfilIdAndPrincipalTrue(Integer perfilId);
+
+    // Fotos que realmente se mostrarian en el perfil.
+    List<FotoPerfil> findByPerfilIdAndActivoTrueOrderByOrdenAsc(Integer perfilId);
+    Optional<FotoPerfil> findByPerfilIdAndPrincipalTrueAndActivoTrue(Integer perfilId);
 }

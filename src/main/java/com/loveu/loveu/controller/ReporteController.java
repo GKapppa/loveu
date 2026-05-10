@@ -12,23 +12,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Controlador REST encargado de exponer los endpoints de reportes.
 @RestController
 @RequestMapping("/api/reportes")
 public class ReporteController {
-    // log.info permite dejar una traza simple de las peticiones ejecutadas.
     private static final Logger log = LoggerFactory.getLogger(ReporteController.class);
     @Autowired
     private ReporteService reporteService;
 
     @PostMapping
     public ResponseEntity<ReporteDTO> crear(
-            // @RequestParam recibe datos simples desde parametros de la peticion.
             @RequestParam Integer perfilReportanteId,
             @RequestParam Integer perfilReportadoId,
             @RequestParam String razonReporte) {
         log.info("POST /api/reportes reportante={} reportado={}", perfilReportanteId, perfilReportadoId);
-        // status(CREATED) responde HTTP 201 porque se crea un reporte nuevo.
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(reporteService.crearReporte(perfilReportanteId, perfilReportadoId, razonReporte));
     }
@@ -51,7 +47,6 @@ public class ReporteController {
         return ResponseEntity.ok(reporteService.getPorPerfilReportado(perfilReportadoId));
     }
 
-    // PATCH actualiza solo el estado del reporte.
     @PatchMapping("/{id}/estado")
     public ResponseEntity<ReporteDTO> actualizarEstado(
             @PathVariable Integer id,

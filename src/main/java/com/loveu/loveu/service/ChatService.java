@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// @Service deja esta clase disponible como componente de logica de negocio.
 @Service
 public class ChatService {
-    // Logger para registrar acciones del servicio durante la ejecucion.
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
 
     @Autowired
@@ -37,7 +35,6 @@ public class ChatService {
             throw new RuntimeException("El emisor y el receptor no pueden ser el mismo perfil");
         }
 
-        // findById devuelve Optional; orElseThrow lanza error si el id no existe.
         Match match = matchRepository.findById(dto.getMatchId())
             .orElseThrow(() -> new RuntimeException("Match no encontrado: " + dto.getMatchId()));
 
@@ -47,7 +44,6 @@ public class ChatService {
         Perfil perfilReceptor = perfilRepository.findById(dto.getPerfilReceptorId())
             .orElseThrow(() -> new RuntimeException("Perfil receptor no encontrado: " + dto.getPerfilReceptorId()));
 
-        // builder crea el mensaje con relaciones ya validadas.
         Mensaje mensaje = Mensaje.builder()
             .match(match)
             .perfilEmisor(perfilEmisor)
@@ -64,14 +60,12 @@ public class ChatService {
     public List<MensajeDTO> getMensajesPorMatch(Integer matchId) {
         log.info("Obteniendo mensajes para matchId={}", matchId);
         return mensajeRepository.findByMatchId(matchId)
-            // Convierte cada Mensaje a DTO antes de devolverlo.
             .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public List<MensajeDTO> getMensajesNoLeidos(Integer perfilReceptorId) {
         log.info("Obteniendo mensajes no leídos para perfilReceptorId={}", perfilReceptorId);
         return mensajeRepository.findAll().stream()
-            // filter deja solo los mensajes del receptor indicado que no estan leidos.
             .filter(m -> m.getPerfilReceptor().getId().equals(perfilReceptorId) && !m.isRead())
             .map(this::toDTO)
             .collect(Collectors.toList());
@@ -90,10 +84,8 @@ public class ChatService {
         mensajeRepository.deleteById(mensajeId);
     }
 
-    // Mapea la entidad Mensaje a un DTO apto para la respuesta HTTP.
     private MensajeDTO toDTO(Mensaje m) {
         return MensajeDTO.builder()
-            .id(m.getId())
             .matchId(m.getMatch().getId())
             .perfilEmisorId(m.getPerfilEmisor().getId())
             .perfilReceptorId(m.getPerfilReceptor().getId())

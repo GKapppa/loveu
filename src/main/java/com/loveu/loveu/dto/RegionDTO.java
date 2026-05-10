@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RegionDTO {
-
-    private Integer id;
     private String nombreRegion;
     private String abreviatura;
 }

@@ -17,17 +17,16 @@ public class RegionService {
 
     private RegionDTO toDTO(Region region){
         return RegionDTO.builder()
-        .id(region.getId())
-        .nombreRegion(region.getNombreRegion())
-        .abreviatura(region.getAbreviatura())
-        .build();
+                .nombreRegion(region.getNombreRegion())
+                .abreviatura(region.getAbreviatura())
+                .build();
     }
 
     public List<RegionDTO> listarTodos(){
         return regionRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    public RegionDTO buscarPorID(Integer id){
+    public RegionDTO buscarPorId(Integer id){
         Region region =  regionRepository.findById(id).orElseThrow(() -> new RuntimeException("Region no encontrada!"));
 
         return toDTO(region);

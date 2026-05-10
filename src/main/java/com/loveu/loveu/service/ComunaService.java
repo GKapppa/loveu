@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.loveu.loveu.dto.ComunaDTO;
 import com.loveu.loveu.model.Comuna;
 import com.loveu.loveu.repository.ComunaRepository;
-import com.loveu.loveu.repository.RegionRepository;
 
 @Service
 public class ComunaService {
@@ -16,15 +15,10 @@ public class ComunaService {
     @Autowired
     private ComunaRepository comunaRepository;
 
-    @Autowired
-    private RegionRepository regionRepository;
-
     private ComunaDTO toDTO(Comuna comuna){
         return ComunaDTO.builder()
-        .id(comuna.getId())
-        .nombreComuna(comuna.getNombreComuna())
-        .regionId(comuna.getRegion().getId())
-        .build();
+                .nombreComuna(comuna.getNombreComuna())
+                .build();
     }
 
     public List<ComunaDTO> listarTodo(){

@@ -15,10 +15,8 @@ import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.MatchRepository;
 import com.loveu.loveu.repository.PerfilRepository;
 
-// @Service marca esta clase como la capa donde vive la logica de negocio.
 @Service
 public class MatchService {
-    // Logger para registrar pasos importantes sin usar System.out.println.
     private static final Logger log = LoggerFactory.getLogger(MatchService.class);
 
     @Autowired
@@ -34,13 +32,9 @@ public class MatchService {
     public boolean verificarYCrearMatch(Integer perfilAId, Integer perfilBId) {
         log.info("Verificando like mutuo entre perfilA={} y perfilB={}", perfilAId, perfilBId);
 
-        // Revisar si ya existe un match entre estos dos perfiles
         boolean yaExiste = matchRepository
-            // Spring Data crea la consulta a partir del nombre del metodo.
             .findByPerfilAIdOrPerfilBId(perfilAId, perfilBId)
-            // stream permite recorrer la lista y aplicar filtros/transformaciones.
             .stream()
-            // anyMatch retorna true si al menos un elemento cumple la condicion.
             .anyMatch(m ->
                 (m.getPerfilA().getId().equals(perfilAId) && m.getPerfilB().getId().equals(perfilBId)) ||
                 (m.getPerfilA().getId().equals(perfilBId) && m.getPerfilB().getId().equals(perfilAId))
@@ -51,14 +45,12 @@ public class MatchService {
             return false;
         }
 
-        // findById devuelve Optional; orElseThrow evita trabajar con datos inexistentes.
         Perfil perfilA = perfilRepository.findById(perfilAId)
             .orElseThrow(() -> new RuntimeException("Perfil A no encontrado: " + perfilAId));
 
         Perfil perfilB = perfilRepository.findById(perfilBId)
             .orElseThrow(() -> new RuntimeException("Perfil B no encontrado: " + perfilBId));
 
-        // builder arma la entidad de forma legible antes de guardarla.
         Match match = Match.builder()
             .perfilA(perfilA)
             .perfilB(perfilB)
@@ -73,7 +65,6 @@ public class MatchService {
     public List<MatchDTO> getMatchesPorPerfil(Integer perfilId) {
         log.info("Obteniendo matches para perfilId={}", perfilId);
         return matchRepository.findByPerfilAIdOrPerfilBId(perfilId, perfilId)
-            // map(this::toDTO) convierte cada Match a MatchDTO.
             .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
@@ -87,19 +78,15 @@ public class MatchService {
         log.info("Deshaciendo match id={}", matchId);
         Match match = matchRepository.findById(matchId)
             .orElseThrow(() -> new RuntimeException("Match no encontrado: " + matchId));
-        // En vez de borrar el registro, se cambia su estado.
         match.setStatus(MatchStatus.UNMATCHED);
         matchRepository.save(match);
         log.info("Match id={} marcado como UNMATCHED", matchId);
     }
 
-    // Convierte la entidad JPA a DTO para responder solo los datos necesarios.
     private MatchDTO toDTO(Match m) {
         return MatchDTO.builder()
-            .id(m.getId())
             .perfilAId(m.getPerfilA().getId())
             .perfilBId(m.getPerfilB().getId())
-            .status(m.getStatus())
             .matchedAt(m.getMatchedAt())
             .build();
     }

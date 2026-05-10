@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByActivo(Boolean activo);
+
+    // Busqueda simple por datos basicos del usuario.
+    List<Usuario> findByPrimerNombreContainingIgnoreCase(String primerNombre);
+    List<Usuario> findByPrimerApellidoContainingIgnoreCase(String primerApellido);
 }   

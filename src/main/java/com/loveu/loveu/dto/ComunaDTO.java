@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ComunaDTO {
-    private Integer id;
     private String nombreComuna;
-    private Integer regionId;
 }

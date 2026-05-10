@@ -6,9 +6,9 @@ import com.loveu.loveu.model.NotificacionType;
 import com.loveu.loveu.model.Perfil;
 import com.loveu.loveu.repository.NotificacionRepository;
 import com.loveu.loveu.repository.PerfilRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,23 +16,21 @@ import java.util.stream.Collectors;
 
 
 @Service
-// Genera constructor para inyectar repositories final.
-@RequiredArgsConstructor
 public class NotificacionService {
-    // Logger para registrar operaciones sin depender de System.out.println.
     private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
-    private final NotificacionRepository notificacionRepository;
-    private final PerfilRepository perfilRepository;
+    @Autowired
+    private NotificacionRepository notificacionRepository;
+
+    @Autowired
+    private PerfilRepository perfilRepository;
 
     public NotificacionDTO crearNotificacion(Integer perfilDestinatarioId, NotificacionType type, String message) {
         log.info("Creando notificación tipo={} para perfilDestinatarioId={}", type, perfilDestinatarioId);
 
-        // findById devuelve Optional; orElseThrow corta el flujo si no existe.
         Perfil perfilDestinatario = perfilRepository.findById(perfilDestinatarioId)
             .orElseThrow(() -> new RuntimeException("Perfil destinatario no encontrado: " + perfilDestinatarioId));
 
-        // builder arma la notificacion con los datos requeridos.
         Notificacion n = Notificacion.builder()
             .perfilDestinatario(perfilDestinatario)
             .type(type)
@@ -48,7 +46,6 @@ public class NotificacionService {
     public List<NotificacionDTO> getNotificacionesPorPerfil(Integer perfilDestinatarioId) {
         log.info("Obteniendo notificaciones para perfilDestinatarioId={}", perfilDestinatarioId);
         return notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId)
-            // stream + map convierte entidades Notificacion en DTOs.
             .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
@@ -59,7 +56,6 @@ public class NotificacionService {
     }
 
     public Integer contarNoLeidas(Integer perfilDestinatarioId) {
-        // size() cuenta cuantas notificaciones no leidas devuelve la consulta.
         Integer count = notificacionRepository.findByPerfilDestinatarioIdAndReadFalse(perfilDestinatarioId).size();
         log.info("Perfil id={} tiene {} notificaciones no leídas", perfilDestinatarioId, count);
         return count;
@@ -69,7 +65,6 @@ public class NotificacionService {
         log.info("Marcando notificación id={} como leída", notificacionId);
         Notificacion n = notificacionRepository.findById(notificacionId)
             .orElseThrow(() -> new RuntimeException("Notificación no encontrada: " + notificacionId));
-        // Se actualiza el campo read para marcarla como leida.
         n.setRead(true);
         notificacionRepository.save(n);
     }
@@ -79,11 +74,8 @@ public class NotificacionService {
         notificacionRepository.deleteById(notificacionId);
     }
 
-    // Convierte la entidad JPA a DTO antes de responder por la API.
     private NotificacionDTO toDTO(Notificacion n) {
         return NotificacionDTO.builder()
-            .id(n.getId())
-            .perfilDestinatarioId(n.getPerfilDestinatario().getId())
             .type(n.getType())
             .message(n.getMessage())
             .read(n.isRead())

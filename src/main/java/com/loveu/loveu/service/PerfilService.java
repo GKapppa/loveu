@@ -1,7 +1,6 @@
 package com.loveu.loveu.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,7 @@ public class PerfilService {
     @Autowired
     private ComunaRepository comunaRepository;
 
-    // Crea el perfil visible de un usuario dentro de la aplicacion.
-    public PerfilDTO crearPerfil(PerfilDTO dto) {
+    public PerfilDTO crearPerfil(PerfilDTO dto){
 
         if (perfilRepository.findByUsuarioId(dto.getUsuarioId()).isPresent()) {
             throw new RuntimeException("Este usuario ya tiene un perfil creado");
@@ -50,38 +48,33 @@ public class PerfilService {
                 .build();
 
         perfil = perfilRepository.save(perfil);
-
         return toDTO(perfil);
     }
 
-    // Obtiene todos los perfiles registrados.
-    public List<PerfilDTO> getTodos() {
-        return perfilRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+    public List<PerfilDTO> getTodos(){
+        return perfilRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    public PerfilDTO getPorId(Integer id) {
+    public PerfilDTO getPorId(Integer id){
         Perfil perfil = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
         return toDTO(perfil);
     }
 
-    // Obtiene el perfil asociado a un usuario.
-    public PerfilDTO getPorUsuario(Integer usuarioId) {
+    public PerfilDTO getPorUsuario(Integer usuarioId){
         Perfil perfil = perfilRepository.findByUsuarioId(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado para este usuario"));
 
         return toDTO(perfil);
     }
 
-    // Obtiene todos los perfiles que pertenecen a una comuna.
-    public List<PerfilDTO> getPorComuna(Integer comunaId) {
+    public List<PerfilDTO> getPorComuna(Integer comunaId){
         return perfilRepository.findByComunaId(comunaId)
-                .stream().map(this::toDTO).collect(Collectors.toList());
+                .stream().map(this::toDTO).toList();
     }
 
-    // Actualiza los datos publicos del perfil.
-    public PerfilDTO actualizarPerfil(Integer id, PerfilDTO dto) {
+    public PerfilDTO actualizarPerfil(Integer id, PerfilDTO dto){
         Perfil perfil = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
@@ -95,12 +88,10 @@ public class PerfilService {
         perfil.setComuna(comuna);
 
         perfil = perfilRepository.save(perfil);
-
         return toDTO(perfil);
     }
 
-    // Desactiva el perfil sin eliminarlo fisicamente de la base de datos.
-    public void desactivarPerfil(Integer id) {
+    public void desactivarPerfil(Integer id){
         Perfil perfil = perfilRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 
@@ -108,19 +99,16 @@ public class PerfilService {
         perfilRepository.save(perfil);
     }
 
-    // Elimina un perfil por su id.
-    public void eliminarPerfil(Integer id) {
+    public void eliminarPerfil(Integer id){
         perfilRepository.deleteById(id);
     }
 
-    private PerfilDTO toDTO(Perfil perfil) {
+    private PerfilDTO toDTO(Perfil perfil){
         return PerfilDTO.builder()
-                .id(perfil.getId())
                 .nombreVisible(perfil.getNombreVisible())
                 .biografia(perfil.getBiografia())
                 .ocupacion(perfil.getOcupacion())
                 .alturaCm(perfil.getAlturaCm())
-                .activo(perfil.isActivo())
                 .usuarioId(perfil.getUsuario().getId())
                 .comunaId(perfil.getComuna().getId())
                 .build();

@@ -13,11 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UsuarioDTO {
 
-    private Integer id;
     private String primerNombre;
     private String primerApellido;
     private LocalDate fechaNacimiento;
     private String telefono;
-    private boolean activo;
 
 }
