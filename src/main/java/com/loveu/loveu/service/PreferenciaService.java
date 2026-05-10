@@ -20,6 +20,7 @@ public class PreferenciaService {
     @Autowired
     private PerfilRepository perfilRepository;
 
+    // Agregamos perfilId para saber a que perfil pertenecen los filtros.
     public PreferenciaDTO toDTO(Preferencia preferencia){
         return PreferenciaDTO.builder()
                 .perfilId(preferencia.getPerfil().getId())
@@ -31,6 +32,7 @@ public class PreferenciaService {
     }
 
     public List<PreferenciaDTO> listarTodas(){
+        // map convierte cada Preferencia en PreferenciaDTO.
         return preferenciaRepository.findAll().stream().map(this::toDTO).toList();
     }
 
@@ -43,6 +45,7 @@ public class PreferenciaService {
             throw new RuntimeException("Este perfil ya tiene preferencias creadas");
         }
 
+        // Buscamos el perfil para guardar la relacion en la tabla preferencias.
         Perfil perfil = perfilRepository.findById(dto.getPerfilId())
                 .orElseThrow(() -> new RuntimeException("Perfil no encontrado"));
 

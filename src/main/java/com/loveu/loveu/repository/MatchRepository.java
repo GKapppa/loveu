@@ -17,10 +17,4 @@ public interface MatchRepository extends JpaRepository<Match, Integer> {
 
     @Query("SELECT m FROM Match m WHERE m.status = ?1")
     List<Match> findByStatus(MatchStatus status);
-
-    @Query("SELECT m FROM Match m WHERE m.perfilA.id = ?1 AND m.status = ?2")
-    List<Match> findByPerfilAIdAndStatus(Integer perfilAId, MatchStatus status);
-
-    @Query("SELECT m FROM Match m WHERE m.perfilB.id = ?1 AND m.status = ?2")
-    List<Match> findByPerfilBIdAndStatus(Integer perfilBId, MatchStatus status);
 }

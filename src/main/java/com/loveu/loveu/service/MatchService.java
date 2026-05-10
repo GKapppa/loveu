@@ -17,6 +17,7 @@ import com.loveu.loveu.repository.PerfilRepository;
 
 @Service
 public class MatchService {
+    // Logger para seguir el flujo de matches desde la consola.
     private static final Logger log = LoggerFactory.getLogger(MatchService.class);
 
     @Autowired
@@ -32,6 +33,7 @@ public class MatchService {
     public boolean verificarYCrearMatch(Integer perfilAId, Integer perfilBId) {
         log.info("Verificando like mutuo entre perfilA={} y perfilB={}", perfilAId, perfilBId);
 
+        // anyMatch revisa si ya existe la pareja en cualquier orden.
         boolean yaExiste = matchRepository
             .findByPerfilAIdOrPerfilBId(perfilAId, perfilBId)
             .stream()

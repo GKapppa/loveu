@@ -21,6 +21,7 @@ public class AuthService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // Convierte la entidad Auth a DTO para no devolver password.
     private AuthDTO toDTO(Auth auth){
         return AuthDTO.builder()
                 .email(auth.getEmail())
