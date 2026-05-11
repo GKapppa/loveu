@@ -39,7 +39,7 @@ El flujo principal de la aplicacion es:
 2. Se crea un registro de Auth con email, password y rol.
 3. El usuario crea un perfil visible dentro de la app.
 4. El perfil puede agregar fotos.
-5. Un perfil puede dar LIKE, DISLIKE o SKIP a otro perfil.
+5. Un perfil puede dar LIKE, DISLIKE a otro perfil.
 6. Si dos perfiles coinciden, se puede crear un match.
 7. El sistema permite generar notificaciones y reportes.
 
