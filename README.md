@@ -5,11 +5,15 @@ LoveU es un backend hecho con Spring Boot para una aplicacion de citas tipo Tind
 El objetivo principal es demostrar el funcionamiento de una API REST conectada a una base de datos relacional, usando una estructura ordenada por capas.
 
 ---
+## Convertidor de texto a YML
+
+- https://theproductguy.in/tools/properties-to-yaml/?properties=spring.application.name%3Dreporte%0Aserver.port%3D8083%0A%0Aspring.datasource.url%3Djdbc%3Apostgresql%3A%2F%2Flocalhost%3A5432%2Freporte_db%0Aspring.datasource.username%3Droot%0Aspring.datasource.password%3D%0A%0Aspring.jpa.hibernate.ddl-auto%3Dvalidate%0Aspring.jpa.show-sql%3Dtrue%0Aspring.jpa.properties.hibernate.format_sql%3Dtrue%0A%0Aspring.flyway.enabled%3Dtrue%0Aspring.flyway.baseline-on-migrate%3Dtrue&mode=to-yaml
 
 ## Integrantes
 
 - Integrante 1: Daniel Pinto
 - Integrante 2: Diego SantiBañez
+- Integrante 3: Paloma Moreno
 
 ---
 
