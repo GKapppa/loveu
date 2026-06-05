@@ -1,0 +1,8 @@
+CREATE TABLE matches (
+    id INTENGER AUTO_INCREMENT PRIMARY KEY,
+    perfil_a_id INTERGER NOT NULL,
+    perfil_b_id INTERGER NOT NULL,
+    status ENUM('ACTIVE', 'UNMATCHED') NOT NULL,
+    matched_at TIMESTAMP NOT NULL
+);
+
