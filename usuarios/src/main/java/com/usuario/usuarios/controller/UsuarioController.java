@@ -30,26 +30,26 @@ public class UsuarioController {
     // Este endpoint es el primer paso antes de crear perfil.
     @PostMapping
     public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO){
-        log.info("POST /api/v1/usuarios");
+        log.info("POST /api/v2/usuarios");
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crearUsuario(usuarioDTO));
     }
 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> obtenerTodos(){
-        log.info("GET /api/v1/usuarios");
+        log.info("GET /api/v2/usuarios");
         return ResponseEntity.ok(usuarioService.obtenerTodos());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO){
-        log.info("PUT /api/v1/usuarios/{}", id);
+        log.info("PUT /api/v2/usuarios/{}", id);
         return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuarioDTO));
     }
 
     // Lo dejamos como baja logica, no borrado real.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id){
-        log.info("DELETE /api/v1/usuarios/{}", id);
+        log.info("DELETE /api/v2/usuarios/{}", id);
         usuarioService.eliminarUsuario(id);
         return ResponseEntity.noContent().build();
     }
