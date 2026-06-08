@@ -1,11 +1,11 @@
 package com.interaccion.interaccion.repository;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.stereotype.Repository;
 import com.interaccion.interaccion.model.Swipe;
 
+@Repository
 public interface SwipeRepository extends JpaRepository<Swipe, Integer> {
 
     List<Swipe> findByPerfilOrigenId(Integer perfilOrigenId);
