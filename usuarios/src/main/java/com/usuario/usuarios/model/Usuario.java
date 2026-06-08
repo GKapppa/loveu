@@ -1,4 +1,4 @@
-package com.loveu.loveu.model;
+package com.usuario.usuarios.model;
 
 import java.time.LocalDate;
 
