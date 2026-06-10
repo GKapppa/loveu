@@ -1,6 +1,5 @@
 package com.interaccion.interaccion.model;
 
-import java.time.LocalDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +9,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,29 +19,32 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "matches")
-public class Match {
+@Builder
+@Table(name = "notificaciones")
+public class Notificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "El id del perfil A es obligatorio")
-    private Integer perfilAId;
+    @NotNull
+    private Integer perfilDestinatarioId;
 
-    @NotNull(message = "El id del perfil B es obligatorio")
-    private Integer perfilBId;
+    @NotBlank
+    @Size(max = 20)
+    private String type;
 
-    @NotBlank(message = "El estado del match no puede quedar vacío")
-    @Size(min = 3, max = 50)
-    private String status;
+    @NotBlank
+    @Size(max = 500)
+    private String message;
 
-    @NotNull(message = "La fecha del match es obligatoria")
-    private LocalDateTime matchedAt;
+    @Builder.Default
+    private boolean leido = false;
+
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
-        this.matchedAt = LocalDateTime.now();
-        if (this.status == null) this.status = MatchStatus.ACTIVE;
+        this.createdAt = LocalDateTime.now();
     }
 }

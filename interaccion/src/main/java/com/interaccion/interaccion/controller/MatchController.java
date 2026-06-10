@@ -1,7 +1,7 @@
-package com.loveu.loveu.controller;
+package com.interaccion.interaccion.controller;
 
 import java.util.List;
-
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.loveu.loveu.dto.MatchDTO;
-import com.loveu.loveu.service.MatchService;
+import com.interaccion.interaccion.dto.MatchDTO;
+import com.interaccion.interaccion.service.MatchService;
 
 @RestController
 @RequestMapping("/api/v2/matches")

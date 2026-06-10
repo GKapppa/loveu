@@ -1,19 +1,16 @@
-package com.loveu.loveu.service;
+package com.interaccion.interaccion.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loveu.loveu.dto.MatchDTO;
-import com.loveu.loveu.model.Match;
-import com.loveu.loveu.model.MatchStatus;
-import com.loveu.loveu.model.Perfil;
-import com.loveu.loveu.repository.MatchRepository;
-import com.loveu.loveu.repository.PerfilRepository;
+import com.interaccion.interaccion.dto.MatchDTO;
+import com.interaccion.interaccion.model.Match;
+import com.interaccion.interaccion.model.MatchStatus;
+import com.interaccion.interaccion.repository.MatchRepository;
 
 @Service
 public class MatchService {
@@ -22,9 +19,6 @@ public class MatchService {
     @Autowired
     private MatchRepository matchRepository;
 
-    @Autowired
-    private PerfilRepository perfilRepository;
-
     public boolean verificarYCrearMatch(Integer perfilAId, Integer perfilBId) {
         log.info("Verificando like mutuo entre perfilA={} y perfilB={}", perfilAId, perfilBId);
 
@@ -32,8 +26,8 @@ public class MatchService {
         boolean yaExiste = false;
 
         for (Match m : matchesExistentes) {
-            if ((m.getPerfilA().getId().equals(perfilAId) && m.getPerfilB().getId().equals(perfilBId)) ||
-                (m.getPerfilA().getId().equals(perfilBId) && m.getPerfilB().getId().equals(perfilAId))) {
+            if ((m.getPerfilAId().equals(perfilAId) && m.getPerfilBId().equals(perfilBId)) ||
+                (m.getPerfilAId().equals(perfilBId) && m.getPerfilBId().equals(perfilAId))) {
                 yaExiste = true;
                 break;
             }
@@ -44,15 +38,9 @@ public class MatchService {
             return false;
         }
 
-        Perfil perfilA = perfilRepository.findById(perfilAId)
-            .orElseThrow(() -> new RuntimeException("Perfil A no encontrado: " + perfilAId));
-
-        Perfil perfilB = perfilRepository.findById(perfilBId)
-            .orElseThrow(() -> new RuntimeException("Perfil B no encontrado: " + perfilBId));
-
         Match match = new Match();
-        match.setPerfilA(perfilA);
-        match.setPerfilB(perfilB);
+        match.setPerfilAId(perfilAId);
+        match.setPerfilBId(perfilBId);
 
         matchRepository.save(match);
         log.info("Nuevo match creado entre perfilA={} y perfilB={}", perfilAId, perfilBId);
@@ -61,10 +49,10 @@ public class MatchService {
 
     public List<MatchDTO> getMatchesPorPerfil(Integer perfilId) {
         log.info("Obteniendo matches para perfilId={}", perfilId);
-        
+
         List<MatchDTO> listaDTOs = new ArrayList<>();
         List<Match> matchesReales = matchRepository.findByPerfilAIdOrPerfilBId(perfilId, perfilId);
-        
+
         for (Match m : matchesReales) {
             listaDTOs.add(toDTO(m));
         }
@@ -73,10 +61,10 @@ public class MatchService {
 
     public List<MatchDTO> getTodosLosMatches() {
         log.info("Obteniendo todos los matches");
-        
+
         List<MatchDTO> listaDTOs = new ArrayList<>();
         List<Match> matchesReales = matchRepository.findAll();
-        
+
         for (Match m : matchesReales) {
             listaDTOs.add(toDTO(m));
         }
@@ -87,7 +75,7 @@ public class MatchService {
         log.info("Deshaciendo match id={}", matchId);
         Match match = matchRepository.findById(matchId)
             .orElseThrow(() -> new RuntimeException("Match no encontrado: " + matchId));
-        
+
         match.setStatus(MatchStatus.UNMATCHED);
         matchRepository.save(match);
         log.info("Match id={} marcado como UNMATCHED", matchId);
@@ -95,8 +83,8 @@ public class MatchService {
 
     private MatchDTO toDTO(Match m) {
         MatchDTO dto = new MatchDTO();
-        dto.setPerfilAId(m.getPerfilA().getId());
-        dto.setPerfilBId(m.getPerfilB().getId());
+        dto.setPerfilAId(m.getPerfilAId());
+        dto.setPerfilBId(m.getPerfilBId());
         dto.setMatchedAt(m.getMatchedAt());
         return dto;
     }

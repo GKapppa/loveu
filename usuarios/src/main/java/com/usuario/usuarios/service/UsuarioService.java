@@ -1,13 +1,13 @@
-package com.loveu.loveu.service;
+package com.usuario.usuarios.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loveu.loveu.dto.UsuarioDTO;
-import com.loveu.loveu.model.Usuario;
-import com.loveu.loveu.repository.UsuarioRepository;
+import com.usuario.usuarios.dto.UsuarioDTO;
+import com.usuario.usuarios.model.Usuario;
+import com.usuario.usuarios.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
