@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.reporte.reporte.DTO.ReporteDTO;
+import com.reporte.reporte.dto.ReporteDTO;
 import com.reporte.reporte.model.EstadoReporte;
 import com.reporte.reporte.model.Reporte;
 import com.reporte.reporte.repository.ReporteRepository;
