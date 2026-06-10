@@ -1,4 +1,4 @@
-package com.loveu.loveu.controller;
+package com.usuario.usuarios.controller;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.loveu.loveu.dto.ComunaDTO;
-import com.loveu.loveu.service.ComunaService;
+import com.usuario.usuarios.dto.ComunaDTO;
+import com.usuario.usuarios.service.ComunaService;
 
 @RestController
 @RequestMapping("/api/v2/comunas")

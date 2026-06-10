@@ -1,10 +1,13 @@
 package com.usuario.usuarios.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.usuario.usuarios.Perfil;
+import com.usuario.usuarios.model.Perfil;
 
 public interface PerfilRepository extends JpaRepository<Perfil, Integer> {
     // Query escrita a mano: busca el perfil que pertenece a un usuario.

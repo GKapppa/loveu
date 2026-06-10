@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import com.usuario.usuarios.dto.AuthDTO;
 import com.usuario.usuarios.dto.AuthRequestDTO;
 import com.usuario.usuarios.service.AuthService;
@@ -31,7 +33,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping
-    public ResponseEntity<?> crearAuth(@RequestParam Integer usuarioId, @RequestBody AuthRequestDTO authDTO) {
+    public ResponseEntity<?> crearAuth(@RequestParam Integer usuarioId, @Valid @RequestBody AuthRequestDTO authDTO) {
         log.info("[v2] POST /api/v2/auth para usuarioId={}", usuarioId);
         try {
             AuthDTO dto = authService.crearAuth(usuarioId, authDTO);
@@ -43,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequestDTO authDTO) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequestDTO authDTO) {
         log.info("[v2] POST /api/v2/auth/login");
         try {
             return ResponseEntity.ok(authService.login(authDTO));

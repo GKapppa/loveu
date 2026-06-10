@@ -1,4 +1,4 @@
-package com.loveu.loveu.repository;
+package com.usuario.usuarios.repository;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.loveu.loveu.model.Comuna;
+import com.usuario.usuarios.model.Comuna;
 
 @Repository
 public interface ComunaRepository extends JpaRepository<Comuna, Integer> {

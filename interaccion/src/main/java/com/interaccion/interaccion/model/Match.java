@@ -26,17 +26,17 @@ public class Match {
     private Integer id;
 
     @NotNull(message = "El id del perfil A es obligatorio")
-    private Integer perfil_a_id;
+    private Integer perfilAId;
 
     @NotNull(message = "El id del perfil B es obligatorio")
-    private Integer perfil_b_id;
+    private Integer perfilBId;
 
     @NotBlank(message = "El estado del match no puede quedar vacío")
     @Size(min = 3, max = 50)
     private String status;
 
     @NotNull(message = "La fecha del match es obligatoria")
-    private LocalDateTime matched_at;
+    private LocalDateTime matchedAt;
 
     @PrePersist
     public void prePersist() {

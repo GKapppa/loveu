@@ -1,4 +1,4 @@
-package com.reporte.reporte.DTO;
+package com.reporte.reporte.dto;
 
 import java.time.LocalDateTime;
 

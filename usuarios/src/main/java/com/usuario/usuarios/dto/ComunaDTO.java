@@ -1,4 +1,4 @@
-package com.loveu.loveu.dto;
+package com.usuario.usuarios.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

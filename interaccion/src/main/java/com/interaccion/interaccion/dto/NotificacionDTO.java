@@ -1,7 +1,6 @@
 package com.interaccion.interaccion.dto;
 
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MensajeDTO {
+public class NotificacionDTO {
     private Integer id;
-    private Integer matchId;
-    private Integer perfilEmisorId;
-    private Integer perfilReceptorId;
-    private String contenido;
-    private LocalDateTime sentAt;
+    private Integer perfilDestinatarioId;
+    private String type;
+    private String message;
     private boolean leido;
+    private LocalDateTime createdAt;
 }

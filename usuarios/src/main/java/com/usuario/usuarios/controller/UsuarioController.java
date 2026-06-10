@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.usuario.usuarios.dto.UsuarioDTO;
+
+import jakarta.validation.Valid;
 import com.usuario.usuarios.service.UsuarioService;
 
 @RestController
@@ -29,7 +31,7 @@ public class UsuarioController {
 
     // Este endpoint es el primer paso antes de crear perfil.
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> crearUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO){
         log.info("POST /api/v2/usuarios");
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crearUsuario(usuarioDTO));
     }
@@ -41,7 +43,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable Integer id, @Valid @RequestBody UsuarioDTO usuarioDTO){
         log.info("PUT /api/v2/usuarios/{}", id);
         return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuarioDTO));
     }
