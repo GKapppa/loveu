@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.usuario.usuarios.dto.PerfilDTO;
-import com.usuario.usuarios.exceptions.ResourceNotFoundException;
 import com.usuario.usuarios.service.PerfilService;
 
 import jakarta.validation.Valid;
@@ -67,11 +66,8 @@ public class PerfilController {
         log.info("PUT /api/v2/perfiles/{}", id);
         try{
             return ResponseEntity.ok(perfilService.actualizarPerfil(id, dto));
-        } catch (ResourceNotFoundException e){
-            log.error("[v2] Perfil a modificar no encontrado por id: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (RuntimeException e){
-            log.error("[v2] Error al intentar actualizar un perfil con id: {} ", e.getMessage());
+            log.error("[v2] Error al intentar actualizar perfil: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
@@ -82,11 +78,8 @@ public class PerfilController {
         try{
             perfilService.desactivarPerfil(id);
             return ResponseEntity.noContent().build();
-        } catch (ResourceNotFoundException e){
-            log.error("[v2] Perfil a desactivar no encontrado por id: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         } catch (RuntimeException e){
-            log.error("[v2] Error al intentar desactivar un perfil con id: {}", e.getMessage());
+            log.error("[v2] Error al desactivar perfil: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
