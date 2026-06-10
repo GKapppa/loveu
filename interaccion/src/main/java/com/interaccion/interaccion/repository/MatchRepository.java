@@ -1,6 +1,7 @@
+package com.interaccion.interaccion.repository;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Integer> {
 

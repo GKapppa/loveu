@@ -43,8 +43,8 @@ public class Perfil {
     private boolean activo = true;
 
     @NotNull(message = "El id de usuario no puede estar vacio")
-    private Integer usuarioid;
+    private Integer usuarioId;
 
     @NotNull(message = "El id de comuna no puede estar vacio")
-    private Integer comunaid;
+    private Integer comunaId;
 }

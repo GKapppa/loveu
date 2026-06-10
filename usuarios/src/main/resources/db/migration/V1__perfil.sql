@@ -4,7 +4,7 @@ CREATE TABLE(
     biografia VARCHAR(500) NOT NULL,
     ocupacion VARCHAR2(30),
     alturaCm INTEGER(3),
-    usuarioid INTEGER NOT NULL,
-    comunaid INTEGER NOT NULL,
+    usuarioId INTEGER NOT NULL,
+    comunaId INTEGER NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE
 );
