@@ -1,0 +1,13 @@
+{
+    "folders": [
+        { "path": "usuarios", "name": "usuarios (8081)" },
+        { "path": "interaccion", "name": "interaccion (8082)" },
+        { "path": "reporte", "name": "reporte (8083)" },
+        { "path": "eureka", "name": "eureka (8761)" },
+        { "path": "gateway", "name": "gateway (8084)" }
+    ],
+    "settings": {
+        "java.configuration.updateBuildConfiguration": "automatic",
+        "java.compile.nullAnalysis.mode": "disabled"
+    }
+}
