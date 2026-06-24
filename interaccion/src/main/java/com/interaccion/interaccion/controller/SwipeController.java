@@ -1,6 +1,5 @@
 package com.interaccion.interaccion.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;

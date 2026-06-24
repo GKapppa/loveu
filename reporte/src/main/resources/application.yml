@@ -6,6 +6,9 @@ springdoc:
     path: /reporte/api-docs
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springdoc.core.configuration.SpringDocHateoasConfiguration
   application:
     name: reporte
   flyway:

@@ -1,3 +1,6 @@
+server:
+  port: 8084
+
 spring:
   application:
     name: gateway
@@ -26,29 +29,14 @@ spring:
               uri: lb://usuarios
               predicates:
                 - Path=/api/v2/regiones/**
-            - id: swipes-service
+            - id: interaccion-service
               uri: lb://interaccion
               predicates:
-                - Path=/api/v2/swipes/**, /interaccion/api-docs/**
-            - id: matches-service
-              uri: lb://interaccion
-              predicates:
-                - Path=/api/v2/matches/**
-            - id: mensajes-service
-              uri: lb://interaccion
-              predicates:
-                - Path=/api/v2/mensajes/**
-            - id: notificaciones-service
-              uri: lb://interaccion
-              predicates:
-                - Path=/api/v2/notificaciones/**
-            - id: reportes-service
+                - Path=/api/v2/swipes/**, /api/v2/matches/**, /api/v2/mensajes/**, /api/v2/notificaciones/**, /interaccion/api-docs/**
+            - id: reporte-service
               uri: lb://reporte
               predicates:
                 - Path=/api/v2/reportes/**, /reporte/api-docs/**
-
-server:
-  port: 8084
 
 eureka:
   client:

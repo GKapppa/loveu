@@ -21,23 +21,19 @@ public class SwipeService {
     @Autowired
     private SwipeRepository swipeRepository;
 
+    @Autowired
+    private InteraccionValidaciones validaciones;
+
     public SwipeDTO crearSwipe(Integer perfilOrigenId, Integer perfilDestinoId, String decision) {
         log.info("[v2] Creando swipe: origen={} destino={} decision={}", perfilOrigenId, perfilDestinoId, decision);
-
-        if (perfilOrigenId.equals(perfilDestinoId)) {
-            throw new RuntimeException("No puedes swipetearte a ti mismo");
-        }
-
-        boolean yaExiste = swipeRepository.existsByPerfilOrigenIdAndPerfilDestinoId(perfilOrigenId, perfilDestinoId);
-        if (yaExiste) {
-            throw new RuntimeException("Ya existe un swipe de este perfil origen hacia este destino");
-        }
+        validaciones.validarNoSelfSwipe(perfilOrigenId, perfilDestinoId);
+        validaciones.validarNoDuplicateSwipe(perfilOrigenId, perfilDestinoId);
 
         Swipe swipe = Swipe.builder()
-            .perfilOrigenId(perfilOrigenId)
-            .perfilDestinoId(perfilDestinoId)
-            .decision(DecisionSwipe.valueOf(decision.toUpperCase()))
-            .build();
+                .perfilOrigenId(perfilOrigenId)
+                .perfilDestinoId(perfilDestinoId)
+                .decision(DecisionSwipe.valueOf(decision.toUpperCase()))
+                .build();
 
         swipe = swipeRepository.save(swipe);
         return toDTO(swipe);
@@ -60,11 +56,11 @@ public class SwipeService {
 
     private SwipeDTO toDTO(Swipe s) {
         return SwipeDTO.builder()
-            .id(s.getId())
-            .perfilOrigenId(s.getPerfilOrigenId())
-            .perfilDestinoId(s.getPerfilDestinoId())
-            .decision(s.getDecision().name())
-            .fecha(s.getFecha())
-            .build();
+                .id(s.getId())
+                .perfilOrigenId(s.getPerfilOrigenId())
+                .perfilDestinoId(s.getPerfilDestinoId())
+                .decision(s.getDecision().name())
+                .fecha(s.getFecha())
+                .build();
     }
 }

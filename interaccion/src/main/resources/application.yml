@@ -6,6 +6,9 @@ springdoc:
     path: /interaccion/api-docs
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springdoc.core.configuration.SpringDocHateoasConfiguration
   application:
     name: interaccion
   flyway:

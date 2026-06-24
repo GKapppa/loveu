@@ -15,6 +15,9 @@ public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
 
+    @Autowired
+    private UsuarioValidaciones validaciones;
+
     private RegionDTO toDTO(Region region) {
         return RegionDTO.builder()
                 .id(region.getId())
@@ -28,8 +31,7 @@ public class RegionService {
     }
 
     public RegionDTO buscarPorId(Integer id) {
-        Region region = regionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Region no encontrada"));
+        Region region = validaciones.validarRegionExiste(id);
         return toDTO(region);
     }
 }

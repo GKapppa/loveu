@@ -21,26 +21,19 @@ public class ReporteService {
     @Autowired
     private ReporteRepository reporteRepository;
 
+    @Autowired
+    private ReporteValidaciones validaciones;
+
     public ReporteDTO crearReporte(Integer perfilReportanteId, Integer perfilReportadoId, String razonReporte) {
         log.info("[v2] Creando reporte: reportante={} reportado={} razon={}", perfilReportanteId, perfilReportadoId, razonReporte);
-
-        if (perfilReportanteId.equals(perfilReportadoId)) {
-            throw new RuntimeException("No puedes reportarte a ti mismo");
-        }
-
-        boolean yaReportado = reporteRepository.findByPerfilReportanteAndActivoTrue(perfilReportanteId)
-            .stream()
-            .anyMatch(r -> r.getPerfilReportado().equals(perfilReportadoId));
-
-        if (yaReportado) {
-            throw new RuntimeException("Ya has reportado a este perfil anteriormente");
-        }
+        validaciones.validarNoSelfReporte(perfilReportanteId, perfilReportadoId);
+        validaciones.validarNoDuplicateReporte(perfilReportanteId, perfilReportadoId);
 
         Reporte reporte = Reporte.builder()
-            .perfilReportante(perfilReportanteId)
-            .perfilReportado(perfilReportadoId)
-            .razonReporte(razonReporte)
-            .build();
+                .perfilReportante(perfilReportanteId)
+                .perfilReportado(perfilReportadoId)
+                .razonReporte(razonReporte)
+                .build();
 
         reporte = reporteRepository.save(reporte);
         log.info("[v2] Reporte id={} creado con estado EN_REVISION", reporte.getId());
@@ -49,26 +42,22 @@ public class ReporteService {
 
     public List<ReporteDTO> getTodos() {
         log.info("[v2] Obteniendo todos los reportes");
-        return reporteRepository.findAll()
-            .stream().map(this::toDTO).collect(Collectors.toList());
+        return reporteRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public List<ReporteDTO> getPorEstado(EstadoReporte estadoReporte) {
         log.info("[v2] Obteniendo reportes con estado={}", estadoReporte);
-        return reporteRepository.findByEstadoReporte(estadoReporte)
-            .stream().map(this::toDTO).collect(Collectors.toList());
+        return reporteRepository.findByEstadoReporte(estadoReporte).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public List<ReporteDTO> getPorPerfilReportado(Integer perfilReportadoId) {
         log.info("[v2] Obteniendo reportes del perfilReportadoId={}", perfilReportadoId);
-        return reporteRepository.findByPerfilReportado(perfilReportadoId)
-            .stream().map(this::toDTO).collect(Collectors.toList());
+        return reporteRepository.findByPerfilReportado(perfilReportadoId).stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public ReporteDTO actualizarEstado(Integer reporteId, EstadoReporte nuevoEstado) {
         log.info("[v2] Actualizando reporte id={} a estado={}", reporteId, nuevoEstado);
-        Reporte reporte = reporteRepository.findById(reporteId)
-            .orElseThrow(() -> new RuntimeException("Reporte no encontrado: " + reporteId));
+        Reporte reporte = validaciones.validarReporteExiste(reporteId);
         reporte.setEstadoReporte(nuevoEstado);
         reporte = reporteRepository.save(reporte);
         log.info("[v2] Reporte id={} actualizado a {}", reporte.getId(), reporte.getEstadoReporte());
@@ -77,15 +66,16 @@ public class ReporteService {
 
     public void eliminarReporte(Integer reporteId) {
         log.info("[v2] Eliminando reporte id={}", reporteId);
+        validaciones.validarReporteExiste(reporteId);
         reporteRepository.deleteById(reporteId);
     }
 
     private ReporteDTO toDTO(Reporte r) {
         return ReporteDTO.builder()
-            .perfilReportanteId(r.getPerfilReportante())
-            .perfilReportadoId(r.getPerfilReportado())
-            .razonReporte(r.getRazonReporte())
-            .fechaReporte(r.getFechaReporte())
-            .build();
+                .perfilReportanteId(r.getPerfilReportante())
+                .perfilReportadoId(r.getPerfilReportado())
+                .razonReporte(r.getRazonReporte())
+                .fechaReporte(r.getFechaReporte())
+                .build();
     }
 }

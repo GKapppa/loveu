@@ -6,6 +6,9 @@ springdoc:
     path: /usuarios/api-docs
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springdoc.core.configuration.SpringDocHateoasConfiguration
   application:
     name: usuarios
   flyway:

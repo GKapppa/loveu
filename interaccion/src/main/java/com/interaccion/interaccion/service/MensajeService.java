@@ -20,19 +20,19 @@ public class MensajeService {
     @Autowired
     private MensajeRepository mensajeRepository;
 
+    @Autowired
+    private InteraccionValidaciones validaciones;
+
     public MensajeDTO enviarMensaje(Integer matchId, Integer perfilEmisorId, Integer perfilReceptorId, String contenido) {
         log.info("[v2] Enviando mensaje: matchId={} emisor={} receptor={}", matchId, perfilEmisorId, perfilReceptorId);
-
-        if (perfilEmisorId.equals(perfilReceptorId)) {
-            throw new RuntimeException("No puedes enviarte un mensaje a ti mismo");
-        }
+        validaciones.validarNoSelfMensaje(perfilEmisorId, perfilReceptorId);
 
         Mensaje mensaje = Mensaje.builder()
-            .matchId(matchId)
-            .perfilEmisorId(perfilEmisorId)
-            .perfilReceptorId(perfilReceptorId)
-            .contenido(contenido)
-            .build();
+                .matchId(matchId)
+                .perfilEmisorId(perfilEmisorId)
+                .perfilReceptorId(perfilReceptorId)
+                .contenido(contenido)
+                .build();
 
         mensaje = mensajeRepository.save(mensaje);
         return toDTO(mensaje);
@@ -41,32 +41,31 @@ public class MensajeService {
     public List<MensajeDTO> getPorMatch(Integer matchId) {
         log.info("[v2] Obteniendo mensajes del matchId={}", matchId);
         return mensajeRepository.findByMatchIdOrderBySentAtAsc(matchId)
-            .stream().map(this::toDTO).collect(Collectors.toList());
+                .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public List<MensajeDTO> getNoLeidos(Integer perfilReceptorId) {
         log.info("[v2] Obteniendo mensajes no leidos de perfilId={}", perfilReceptorId);
         return mensajeRepository.findByPerfilReceptorIdAndLeidoFalse(perfilReceptorId)
-            .stream().map(this::toDTO).collect(Collectors.toList());
+                .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public void marcarComoLeido(Integer mensajeId) {
         log.info("[v2] Marcando mensaje id={} como leido", mensajeId);
-        Mensaje mensaje = mensajeRepository.findById(mensajeId)
-            .orElseThrow(() -> new RuntimeException("Mensaje no encontrado: " + mensajeId));
+        Mensaje mensaje = validaciones.validarMensajeExiste(mensajeId);
         mensaje.setLeido(true);
         mensajeRepository.save(mensaje);
     }
 
     private MensajeDTO toDTO(Mensaje m) {
         return MensajeDTO.builder()
-            .id(m.getId())
-            .matchId(m.getMatchId())
-            .perfilEmisorId(m.getPerfilEmisorId())
-            .perfilReceptorId(m.getPerfilReceptorId())
-            .contenido(m.getContenido())
-            .sentAt(m.getSentAt())
-            .leido(m.isLeido())
-            .build();
+                .id(m.getId())
+                .matchId(m.getMatchId())
+                .perfilEmisorId(m.getPerfilEmisorId())
+                .perfilReceptorId(m.getPerfilReceptorId())
+                .contenido(m.getContenido())
+                .sentAt(m.getSentAt())
+                .leido(m.isLeido())
+                .build();
     }
 }

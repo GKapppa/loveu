@@ -15,18 +15,21 @@ public class ComunaService {
     @Autowired
     private ComunaRepository comunaRepository;
 
-    private ComunaDTO toDTO(Comuna comuna){
+    @Autowired
+    private UsuarioValidaciones validaciones;
+
+    private ComunaDTO toDTO(Comuna comuna) {
         return ComunaDTO.builder()
                 .nombreComuna(comuna.getNombreComuna())
                 .build();
     }
 
-    public List<ComunaDTO> listarTodo(){
+    public List<ComunaDTO> listarTodo() {
         return comunaRepository.findAll().stream().map(this::toDTO).toList();
     }
 
-    public ComunaDTO buscarPorID(Integer id){
-        Comuna comuna = comunaRepository.findById(id).orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
+    public ComunaDTO buscarPorID(Integer id) {
+        Comuna comuna = validaciones.validarComunaExiste(id);
         return toDTO(comuna);
     }
 }

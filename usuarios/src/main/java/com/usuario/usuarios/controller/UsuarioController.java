@@ -23,6 +23,7 @@ import com.usuario.usuarios.dto.UsuarioDTO;
 import com.usuario.usuarios.service.UsuarioService;
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.NotFoundException;
 
 @RestController
 @RequestMapping("/api/v2/usuarios")
@@ -39,8 +40,8 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<EntityModel<UsuarioDTO>> crearUsuario(@Valid @RequestBody UsuarioDTO dto) {
         log.info("POST /api/v2/usuarios");
-        UsuarioDTO creado = usuarioService.crearUsuario(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(creado));
+            UsuarioDTO creado = usuarioService.crearUsuario(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(creado));   
     }
 
     @GetMapping
@@ -54,25 +55,42 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<UsuarioDTO>> obtenerPorId(@PathVariable Integer id) {
         log.info("GET /api/v2/usuarios/{}", id);
-        UsuarioDTO dto = usuarioService.obtenerTodos().stream()
-                .filter(u -> u.getUsuarioId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + id));
-        return ResponseEntity.ok(assembler.toModel(dto));
+        try {
+            UsuarioDTO dto = usuarioService.obtenerTodos().stream()
+                    .filter(u -> u.getUsuarioId().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + id));
+            return ResponseEntity.ok(assembler.toModel(dto));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(EntityModel.of(new UsuarioDTO()));
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EntityModel<UsuarioDTO>> actualizarUsuario(@PathVariable Integer id,
             @Valid @RequestBody UsuarioDTO dto) {
         log.info("PUT /api/v2/usuarios/{}", id);
-        UsuarioDTO actualizado = usuarioService.actualizarUsuario(id, dto);
-        return ResponseEntity.ok(assembler.toModel(actualizado));
+        try {
+            UsuarioDTO actualizado = usuarioService.actualizarUsuario(id, dto);
+            return ResponseEntity.ok(assembler.toModel(actualizado));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(EntityModel.of(new UsuarioDTO()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(EntityModel.of(new UsuarioDTO()));
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Integer id) {
         log.info("DELETE /api/v2/usuarios/{}", id);
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
+        try {
+            usuarioService.eliminarUsuario(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
