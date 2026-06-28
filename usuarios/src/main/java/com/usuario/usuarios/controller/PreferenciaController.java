@@ -1,7 +1,6 @@
 package com.usuario.usuarios.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +21,7 @@ import com.usuario.usuarios.service.PreferenciaService;
 
 import jakarta.validation.Valid;
 
+// GlobalExceptionHandler se encarga de todo, ya no ocupo try-catch
 @RestController
 @RequestMapping("/api/v2/preferencias")
 public class PreferenciaController {
@@ -32,101 +32,41 @@ public class PreferenciaController {
     private PreferenciaService preferenciaService;
 
     @PostMapping
-    public ResponseEntity<?> crearPreferencia(@Valid @RequestBody PreferenciaDTO dto) {
+    public ResponseEntity<PreferenciaDTO> crearPreferencia(@Valid @RequestBody PreferenciaDTO dto) {
         log.info("POST /api/v2/preferencias");
-        try {
-            PreferenciaDTO creado = preferenciaService.crearPreferencia(dto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al crear preferencia: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al crear preferencia: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        PreferenciaDTO creado = preferenciaService.crearPreferencia(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(creado);
     }
 
     @GetMapping
-    public ResponseEntity<?> listarTodas() {
+    public ResponseEntity<List<PreferenciaDTO>> listarTodas() {
         log.info("GET /api/v2/preferencias");
-        try {
-            List<PreferenciaDTO> lista = preferenciaService.listarTodas();
-            return ResponseEntity.ok(lista);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al listar preferencias: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al listar preferencias: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        return ResponseEntity.ok(preferenciaService.listarTodas());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+    public ResponseEntity<PreferenciaDTO> buscarPorId(@PathVariable Integer id) {
         log.info("GET /api/v2/preferencias/{}", id);
-        try {
-            PreferenciaDTO dto = preferenciaService.buscarPorId(id);
-            return ResponseEntity.ok(dto);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al buscar preferencia por id: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al buscar preferencia: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        return ResponseEntity.ok(preferenciaService.buscarPorId(id));
     }
 
     @GetMapping("/perfil/{perfilId}")
-    public ResponseEntity<?> buscarPorPerfil(@PathVariable Integer perfilId) {
+    public ResponseEntity<PreferenciaDTO> buscarPorPerfil(@PathVariable Integer perfilId) {
         log.info("GET /api/v2/preferencias/perfil/{}", perfilId);
-        try {
-            PreferenciaDTO dto = preferenciaService.buscarPorPerfil(perfilId);
-            return ResponseEntity.ok(dto);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al buscar preferencia por perfil: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al buscar preferencia por perfil: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        return ResponseEntity.ok(preferenciaService.buscarPorPerfil(perfilId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarPreferencia(@PathVariable Integer id,
+    public ResponseEntity<PreferenciaDTO> actualizarPreferencia(@PathVariable Integer id,
             @Valid @RequestBody PreferenciaDTO dto) {
         log.info("PUT /api/v2/preferencias/{}", id);
-        try {
-            PreferenciaDTO actualizado = preferenciaService.actualizarPreferencia(id, dto);
-            return ResponseEntity.ok(actualizado);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al actualizar preferencia: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al actualizar preferencia: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        return ResponseEntity.ok(preferenciaService.actualizarPreferencia(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> desactivarPreferencia(@PathVariable Integer id) {
+    public ResponseEntity<Void> desactivarPreferencia(@PathVariable Integer id) {
         log.info("DELETE /api/v2/preferencias/{}", id);
-        try {
-            preferenciaService.desactivarPreferencia(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al desactivar preferencia: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        } catch (Exception e) {
-            log.error("[v2] Error inesperado al desactivar preferencia: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error interno del servidor"));
-        }
+        preferenciaService.desactivarPreferencia(id);
+        return ResponseEntity.noContent().build();
     }
 }

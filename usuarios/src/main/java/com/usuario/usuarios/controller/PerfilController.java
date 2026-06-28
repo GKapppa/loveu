@@ -1,7 +1,6 @@
 package com.usuario.usuarios.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +22,7 @@ import com.usuario.usuarios.service.PerfilService;
 
 import jakarta.validation.Valid;
 
+// Las excepciones las atrapa GlobalExceptionHandler, ya no necesito try-catch aca
 @RestController
 @RequestMapping("/api/v2/perfiles")
 public class PerfilController {
@@ -32,55 +32,36 @@ public class PerfilController {
     private PerfilService perfilService;
 
     @PostMapping
-    public ResponseEntity<?> crearPerfil(@RequestParam Integer usuarioId,
-        @RequestParam Integer comunaId){
+    public ResponseEntity<PerfilDTO> crearPerfil(@RequestParam Integer usuarioId,
+            @RequestParam Integer comunaId) {
         log.info("Post /api/v2/perfiles");
-        try{
-            PerfilDTO dto = perfilService.crearPerfil(usuarioId, comunaId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-        } catch (RuntimeException e){
-            log.error("[v2] Error al crear perfil: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        PerfilDTO dto = perfilService.crearPerfil(usuarioId, comunaId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping
-    public ResponseEntity<List<PerfilDTO>> getTodos(){
+    public ResponseEntity<List<PerfilDTO>> getTodos() {
         log.info("GET /api/v2/perfiles");
         return ResponseEntity.ok(perfilService.getTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPorId(@PathVariable Integer id){
+    public ResponseEntity<PerfilDTO> getPorId(@PathVariable Integer id) {
         log.info("GET /api/v2/perfiles/{}", id);
-        try{
-            return ResponseEntity.ok(perfilService.getPorUsuario(id));
-        } catch (RuntimeException e){
-            log.error("[v2] Error al buscar perfil por id: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(perfilService.getPorUsuario(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarPerfil(@PathVariable Integer id, @Valid @RequestBody PerfilDTO dto){
+    public ResponseEntity<PerfilDTO> actualizarPerfil(@PathVariable Integer id,
+            @Valid @RequestBody PerfilDTO dto) {
         log.info("PUT /api/v2/perfiles/{}", id);
-        try{
-            return ResponseEntity.ok(perfilService.actualizarPerfil(id, dto));
-        } catch (RuntimeException e){
-            log.error("[v2] Error al intentar actualizar perfil: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(perfilService.actualizarPerfil(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> desactivarPerfil(@PathVariable Integer id){
+    public ResponseEntity<Void> desactivarPerfil(@PathVariable Integer id) {
         log.info("DELETE /api/v2/perfiles/{}", id);
-        try{
-            perfilService.desactivarPerfil(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e){
-            log.error("[v2] Error al desactivar perfil: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        perfilService.desactivarPerfil(id);
+        return ResponseEntity.noContent().build();
     }
 }
