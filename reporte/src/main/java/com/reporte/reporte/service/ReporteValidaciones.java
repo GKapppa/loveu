@@ -3,6 +3,7 @@ package com.reporte.reporte.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.reporte.reporte.exception.ResourceNotFoundException;
 import com.reporte.reporte.model.Reporte;
 import com.reporte.reporte.repository.ReporteRepository;
 
@@ -14,7 +15,7 @@ public class ReporteValidaciones {
 
     public Reporte validarReporteExiste(Integer id) {
         return reporteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reporte no encontrado: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Reporte no encontrado: " + id));
     }
 
     public void validarNoSelfReporte(Integer reportante, Integer reportado) {

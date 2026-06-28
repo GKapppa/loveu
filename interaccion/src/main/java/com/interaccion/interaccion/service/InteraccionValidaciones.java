@@ -3,6 +3,7 @@ package com.interaccion.interaccion.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.interaccion.interaccion.exception.ResourceNotFoundException;
 import com.interaccion.interaccion.model.Match;
 import com.interaccion.interaccion.model.Mensaje;
 import com.interaccion.interaccion.model.Notificacion;
@@ -29,7 +30,7 @@ public class InteraccionValidaciones {
 
     public Swipe validarSwipeExiste(Integer id) {
         return swipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Swipe no encontrado: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Swipe no encontrado: " + id));
     }
 
     public void validarNoSelfSwipe(Integer origen, Integer destino) {
@@ -46,7 +47,7 @@ public class InteraccionValidaciones {
 
     public Match validarMatchExiste(Integer id) {
         return matchRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Match no encontrado: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Match no encontrado: " + id));
     }
 
     public void validarNoSelfMatch(Integer perfilA, Integer perfilB) {
@@ -57,7 +58,7 @@ public class InteraccionValidaciones {
 
     public Mensaje validarMensajeExiste(Integer id) {
         return mensajeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mensaje no encontrado: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Mensaje no encontrado: " + id));
     }
 
     public void validarNoSelfMensaje(Integer emisor, Integer receptor) {
@@ -68,6 +69,6 @@ public class InteraccionValidaciones {
 
     public Notificacion validarNotificacionExiste(Integer id) {
         return notificacionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Notificacion no encontrada: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Notificacion no encontrada: " + id));
     }
 }
