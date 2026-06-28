@@ -1,7 +1,5 @@
 package com.interaccion.interaccion.controller;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.interaccion.interaccion.dto.SwipeDTO;
 import com.interaccion.interaccion.service.SwipeService;
 
+// @RestControllerAdvice atrapa todo, asi no ensucio el codigo con try-catch
 @RestController
 @RequestMapping("/api/v2/swipes")
 public class SwipeController {
@@ -27,50 +26,31 @@ public class SwipeController {
     private SwipeService swipeService;
 
     @PostMapping
-    public ResponseEntity<?> crearSwipe(
+    public ResponseEntity<SwipeDTO> crearSwipe(
             @RequestParam Integer perfilOrigenId,
             @RequestParam Integer perfilDestinoId,
             @RequestParam String decision) {
-        log.info("[v2] POST /api/v2/swipes - origen={} destino={} decision={}", perfilOrigenId, perfilDestinoId, decision);
-        try {
-            SwipeDTO dto = swipeService.crearSwipe(perfilOrigenId, perfilDestinoId, decision);
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al crear swipe: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        log.info("[v2] POST /api/v2/swipes - origen={} destino={} decision={}", perfilOrigenId, perfilDestinoId,
+                decision);
+        SwipeDTO dto = swipeService.crearSwipe(perfilOrigenId, perfilDestinoId, decision);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping
-    public ResponseEntity<?> getTodos() {
+    public ResponseEntity<java.util.List<SwipeDTO>> getTodos() {
         log.info("[v2] GET /api/v2/swipes");
-        try {
-            return ResponseEntity.ok(swipeService.getTodos());
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener swipes: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(swipeService.getTodos());
     }
 
     @GetMapping("/origen/{perfilOrigenId}")
-    public ResponseEntity<?> getPorOrigen(@PathVariable Integer perfilOrigenId) {
+    public ResponseEntity<java.util.List<SwipeDTO>> getPorOrigen(@PathVariable Integer perfilOrigenId) {
         log.info("[v2] GET /api/v2/swipes/origen/{}", perfilOrigenId);
-        try {
-            return ResponseEntity.ok(swipeService.getPorOrigen(perfilOrigenId));
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener swipes por origen: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(swipeService.getPorOrigen(perfilOrigenId));
     }
 
     @GetMapping("/destino/{perfilDestinoId}")
-    public ResponseEntity<?> getPorDestino(@PathVariable Integer perfilDestinoId) {
+    public ResponseEntity<java.util.List<SwipeDTO>> getPorDestino(@PathVariable Integer perfilDestinoId) {
         log.info("[v2] GET /api/v2/swipes/destino/{}", perfilDestinoId);
-        try {
-            return ResponseEntity.ok(swipeService.getPorDestino(perfilDestinoId));
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener swipes por destino: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(swipeService.getPorDestino(perfilDestinoId));
     }
 }

@@ -1,7 +1,6 @@
 package com.interaccion.interaccion.controller;
 
 import java.util.List;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.interaccion.interaccion.dto.MatchDTO;
 import com.interaccion.interaccion.service.MatchService;
 
+// Las excepciones las maneja GlobalExceptionHandler, ya no necesito try-catch
 @RestController
 @RequestMapping("/api/v2/matches")
 public class MatchController {
@@ -27,46 +27,40 @@ public class MatchController {
     private MatchService matchService;
 
     @PostMapping("/verificar")
-    public ResponseEntity<?> verificarYCrearMatch(@RequestParam Integer perfilAId, @RequestParam Integer perfilBId) {
-        log.info("POST /api/v1/matches/verificar perfilAId={} perfilBId={}", perfilAId, perfilBId);
-        try {
-            if (perfilAId == null || perfilBId == null) {
-                throw new RuntimeException("Los dos perfiles son obligatorios");
-            }
+    public ResponseEntity<Boolean> verificarYCrearMatch(@RequestParam Integer perfilAId,
+            @RequestParam Integer perfilBId) {
+        log.info("POST /api/v2/matches/verificar perfilAId={} perfilBId={}", perfilAId, perfilBId);
 
-            if (perfilAId.equals(perfilBId)) {
-                throw new RuntimeException("No se puede crear match con el mismo perfil");
-            }
-
-            Boolean resultado = matchService.verificarYCrearMatch(perfilAId, perfilBId);
-            return new ResponseEntity<>(resultado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        if (perfilAId == null || perfilBId == null) {
+            throw new RuntimeException("Los dos perfiles son obligatorios");
         }
+
+        if (perfilAId.equals(perfilBId)) {
+            throw new RuntimeException("No se puede crear match con el mismo perfil");
+        }
+
+        Boolean resultado = matchService.verificarYCrearMatch(perfilAId, perfilBId);
+        return new ResponseEntity<>(resultado, HttpStatus.OK);
     }
 
     @GetMapping("/perfil/{perfilId}")
     public ResponseEntity<List<MatchDTO>> getMatchesPorPerfil(@PathVariable Integer perfilId) {
-        log.info("GET /api/v1/matches/perfil/{}", perfilId);
+        log.info("GET /api/v2/matches/perfil/{}", perfilId);
         List<MatchDTO> lista = matchService.getMatchesPorPerfil(perfilId);
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<MatchDTO>> getTodosLosMatches() {
-        log.info("GET /api/v1/matches");
+        log.info("GET /api/v2/matches");
         List<MatchDTO> lista = matchService.getTodosLosMatches();
         return new ResponseEntity<>(lista, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/deshacer")
-    public ResponseEntity<?> deshacerMatch(@PathVariable Integer id) {
-        log.info("PATCH /api/v1/matches/{}/deshacer", id);
-        try {
-            matchService.deshacerMatch(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Void> deshacerMatch(@PathVariable Integer id) {
+        log.info("PATCH /api/v2/matches/{}/deshacer", id);
+        matchService.deshacerMatch(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
