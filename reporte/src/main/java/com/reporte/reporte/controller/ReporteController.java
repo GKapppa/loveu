@@ -1,7 +1,5 @@
 package com.reporte.reporte.controller;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import com.reporte.reporte.dto.ReporteDTO;
 import com.reporte.reporte.model.EstadoReporte;
 import com.reporte.reporte.service.ReporteService;
 
+// @RestControllerAdvice atrapa las excepciones, codigo mas limpio sin try-catch
 @RestController
 @RequestMapping("/api/v2/reportes")
 public class ReporteController {
@@ -30,75 +29,46 @@ public class ReporteController {
     private ReporteService reporteService;
 
     @PostMapping
-    public ResponseEntity<?> crearReporte(
+    public ResponseEntity<ReporteDTO> crearReporte(
             @RequestParam Integer perfilReportanteId,
             @RequestParam Integer perfilReportadoId,
             @RequestParam String razonReporte) {
         log.info("[v2] POST /api/v2/reportes - reportante={} reportado={}", perfilReportanteId, perfilReportadoId);
-        try {
-            ReporteDTO dto = reporteService.crearReporte(perfilReportanteId, perfilReportadoId, razonReporte);
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al crear reporte: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        ReporteDTO dto = reporteService.crearReporte(perfilReportanteId, perfilReportadoId, razonReporte);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping
-    public ResponseEntity<?> getTodos() {
+    public ResponseEntity<java.util.List<ReporteDTO>> getTodos() {
         log.info("[v2] GET /api/v2/reportes");
-        try {
-            return ResponseEntity.ok(reporteService.getTodos());
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener reportes: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(reporteService.getTodos());
     }
 
     @GetMapping("/estado/{estado}")
-    public ResponseEntity<?> getPorEstado(@PathVariable EstadoReporte estado) {
+    public ResponseEntity<java.util.List<ReporteDTO>> getPorEstado(@PathVariable EstadoReporte estado) {
         log.info("[v2] GET /api/v2/reportes/estado/{}", estado);
-        try {
-            return ResponseEntity.ok(reporteService.getPorEstado(estado));
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener reportes por estado: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(reporteService.getPorEstado(estado));
     }
 
     @GetMapping("/reportado/{perfilReportadoId}")
-    public ResponseEntity<?> getPorPerfilReportado(@PathVariable Integer perfilReportadoId) {
+    public ResponseEntity<java.util.List<ReporteDTO>> getPorPerfilReportado(
+            @PathVariable Integer perfilReportadoId) {
         log.info("[v2] GET /api/v2/reportes/reportado/{}", perfilReportadoId);
-        try {
-            return ResponseEntity.ok(reporteService.getPorPerfilReportado(perfilReportadoId));
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al obtener reportes del perfil: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(reporteService.getPorPerfilReportado(perfilReportadoId));
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<?> actualizarEstado(
+    public ResponseEntity<ReporteDTO> actualizarEstado(
             @PathVariable Integer id,
             @RequestParam EstadoReporte nuevoEstado) {
         log.info("[v2] PATCH /api/v2/reportes/{}/estado -> {}", id, nuevoEstado);
-        try {
-            return ResponseEntity.ok(reporteService.actualizarEstado(id, nuevoEstado));
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al actualizar estado: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        return ResponseEntity.ok(reporteService.actualizarEstado(id, nuevoEstado));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarReporte(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminarReporte(@PathVariable Integer id) {
         log.info("[v2] DELETE /api/v2/reportes/{}", id);
-        try {
-            reporteService.eliminarReporte(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            log.error("[v2] Error al eliminar reporte: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
+        reporteService.eliminarReporte(id);
+        return ResponseEntity.noContent().build();
     }
 }
