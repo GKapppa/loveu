@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import com.usuario.usuarios.model.Auth;
 import com.usuario.usuarios.model.Comuna;
 import com.usuario.usuarios.model.Perfil;
+import com.usuario.usuarios.model.Preferencia;
 import com.usuario.usuarios.model.Region;
 import com.usuario.usuarios.model.Usuario;
 import com.usuario.usuarios.repository.AuthRepository;
 import com.usuario.usuarios.repository.ComunaRepository;
 import com.usuario.usuarios.repository.PerfilRepository;
+import com.usuario.usuarios.repository.PreferenciaRepository;
 import com.usuario.usuarios.repository.RegionRepository;
 import com.usuario.usuarios.repository.UsuarioRepository;
 
@@ -31,6 +33,9 @@ public class UsuarioValidaciones {
 
     @Autowired
     private RegionRepository regionRepository;
+
+    @Autowired
+    private PreferenciaRepository preferenciaRepository;
 
     public Usuario validarUsuarioExiste(Integer id) {
         return usuarioRepository.findById(id)
@@ -83,5 +88,16 @@ public class UsuarioValidaciones {
     public Region validarRegionExiste(Integer id) {
         return regionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Region no encontrada: " + id));
+    }
+
+    public Preferencia validarPreferenciaExiste(Integer id) {
+        return preferenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Preferencia no encontrada con id: " + id));
+    }
+
+    public void validarUnicaPreferenciaPorPerfil(Integer perfilId) {
+        if (preferenciaRepository.existsByPerfilIdAndActivoTrue(perfilId)) {
+            throw new RuntimeException("Este perfil ya tiene una preferencia creada");
+        }
     }
 }

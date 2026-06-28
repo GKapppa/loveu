@@ -29,6 +29,10 @@ spring:
               uri: lb://usuarios
               predicates:
                 - Path=/api/v2/regiones/**
+            - id: preferencias-service
+              uri: lb://usuarios
+              predicates:
+                - Path=/api/v2/preferencias/**
             - id: interaccion-service
               uri: lb://interaccion
               predicates:
