@@ -13,15 +13,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.usuario.usuarios.dto.ComunaDTO;
 import com.usuario.usuarios.service.ComunaService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/v2/comunas")
+@Tag(name = "Comunas", description = "Comunas asociadas a regiones")
 public class ComunaController {
     private static final Logger log = LoggerFactory.getLogger(ComunaController.class);
 
     @Autowired
     private ComunaService comunaService;
 
-    // La comuna se usa para ubicar el perfil, no tiene mucha vuelta.
+    @Operation(summary = "Listar comunas", description = "Obtiene todas las comunas disponibles")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de comunas")
+    })
     @GetMapping
     public ResponseEntity<List<ComunaDTO>> listarTodo(){
         log.info("GET /api/v2/comunas");
