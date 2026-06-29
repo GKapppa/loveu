@@ -5,11 +5,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.usuario.usuarios.dto.PreferenciaDTO;
+import com.usuario.usuarios.exception.ResourceNotFoundException;
 import com.usuario.usuarios.model.Preferencia;
 import com.usuario.usuarios.repository.PreferenciaRepository;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class PreferenciaService {
@@ -21,6 +26,9 @@ public class PreferenciaService {
 
     @Autowired
     private UsuarioValidaciones validaciones;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder;
 
     private PreferenciaDTO toDTO(Preferencia p) {
         return PreferenciaDTO.builder()
@@ -37,12 +45,8 @@ public class PreferenciaService {
 
     public PreferenciaDTO crearPreferencia(PreferenciaDTO dto) {
         log.info("[v2] Creando preferencia para perfilId={}", dto.getPerfilId());
-        try {
-            validaciones.validarPerfilExiste(dto.getPerfilId());
-        } catch (RuntimeException e) {
-            log.error("[v2] Perfil no existe: {}", e.getMessage());
-            throw new RuntimeException("Perfil no encontrado con id: " + dto.getPerfilId());
-        }
+
+        validarPerfilExisteViaRest(dto.getPerfilId());
 
         try {
             validaciones.validarUnicaPreferenciaPorPerfil(dto.getPerfilId());
@@ -213,6 +217,31 @@ public class PreferenciaService {
         } catch (Exception e) {
             log.error("[v2] Error al desactivar preferencia: {}", e.getMessage());
             throw new RuntimeException("Error al desactivar la preferencia en la base de datos");
+        }
+    }
+
+    private void validarPerfilExisteViaRest(Integer perfilId) {
+        log.info("[v2] Verificando perfil via REST: perfilId={}", perfilId);
+        try {
+            HttpStatusCode status = webClientBuilder.build()
+                    .get()
+                    .uri("lb://usuarios/api/v2/perfiles/" + perfilId)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.empty())
+                    .toBodilessEntity()
+                    .block()
+                    .getStatusCode();
+
+            if (status == null || !status.is2xxSuccessful()) {
+                log.error("[v2] Perfil no existe via REST: perfilId={}", perfilId);
+                throw new ResourceNotFoundException("Perfil no encontrado con id: " + perfilId);
+            }
+            log.info("[v2] Perfil verificado via REST: perfilId={}", perfilId);
+        } catch (ResourceNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("[v2] Error al verificar perfil via REST: {}", e.getMessage());
+            throw new ResourceNotFoundException("Perfil no encontrado via REST: " + perfilId);
         }
     }
 
