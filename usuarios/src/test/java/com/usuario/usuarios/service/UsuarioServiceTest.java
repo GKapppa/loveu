@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +20,9 @@ class UsuarioServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private UsuarioValidaciones validaciones;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -64,13 +66,13 @@ class UsuarioServiceTest {
         usuario.setId(1);
         usuario.setActivo(true);
 
-        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(validaciones.validarUsuarioExiste(1)).thenReturn(usuario);
         when(usuarioRepository.save(any(Usuario.class))).thenReturn(usuario);
 
         usuarioService.eliminarUsuario(1);
 
         assertFalse(usuario.isActivo());
-        verify(usuarioRepository).findById(1);
+        verify(validaciones).validarUsuarioExiste(1);
         verify(usuarioRepository).save(usuario);
     }
 }
