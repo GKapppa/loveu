@@ -45,7 +45,7 @@ spring:
     activate:
       on-profile: test
   datasource:
-    url: jdbc:postgresql://localhost:5433/interaccion_db_test?createDataBaseIfNotExist=true
+    url: jdbc:postgresql://localhost:5432/interaccion_db_test?createDataBaseIfNotExist=true
     username: root
     password: ''
   jpa:
@@ -58,7 +58,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://localhost:5433/interaccion_db_prod?createDataBaseIfNotExist=true
+    url: jdbc:postgresql://localhost:5432/interaccion_db_prod?createDataBaseIfNotExist=true
     username: root
     password: ''
   jpa:

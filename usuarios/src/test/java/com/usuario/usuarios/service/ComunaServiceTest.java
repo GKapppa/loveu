@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.usuario.usuarios.dto.ComunaDTO;
-import com.usuario.usuarios.model.Comuna;
 import com.usuario.usuarios.repository.ComunaRepository;
 
 @ExtendWith(MockitoExtension.class)
