@@ -31,7 +31,7 @@ public class AuthService {
                 .rol(auth.getRol())
                 .build();
     }
-
+    
     public List<AuthDTO> listarTodos() {
         log.info("[v2] Listando todos los auth");
         return authRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
